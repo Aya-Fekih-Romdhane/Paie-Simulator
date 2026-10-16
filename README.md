@@ -26,9 +26,13 @@ En régime horaire, le mois se compte en heures (`H.Prev`) et le salaire de base
 
 ### Bulletin de paie
 
-Bulletin complet, prêt à imprimer ou à exporter en PDF depuis le navigateur.
+Modèle **noir et blanc**, prêt à imprimer ou à exporter en PDF depuis le navigateur. Le nom de l'auteur apparaît en filigrane en fond de page, avec le tampon d'auteur et la mention de droit d'auteur en pied de document — à l'écran comme à l'impression.
 
 ![Bulletin de paie](docs/screenshots/bulletin.png)
+
+Un second modèle, plus proche d'un bulletin classique, reste disponible dans la liste **Modèle du bulletin** :
+
+![Modèle classique](docs/screenshots/bulletin-classique.png)
 
 ### Paramètres
 
@@ -79,6 +83,15 @@ Avance, remboursement de crédit et pénalités sont déduits après le calcul d
 ### Bulletin de paie
 
 Bulletin au format tunisien : en-tête société et salarié, tableau des gains et retenues avec part patronale, net à payer en dinars, mode de paiement, zones de signature et suivi des congés. Imprimable directement ou exportable en PDF.
+
+Deux modèles au choix :
+
+| Modèle | Description |
+|--------|-------------|
+| **Noir et blanc** (par défaut) | Mise en page sobre, gains et retenues regroupés par section, filigrane au nom de l'auteur, tampon d'auteur et mention de droit d'auteur |
+| **Classique** | Mise en page tabulaire traditionnelle, encadrés pleine largeur |
+
+Le filigrane et le tampon sont conservés à l'impression comme à l'affichage.
 
 ### Paramètres modifiables
 
@@ -220,6 +233,8 @@ Principales fonctions exposées : `solve`, `solveBase`, `compute`, `normDays`, `
 ## Technologies
 
 HTML, CSS et JavaScript natifs — aucun framework, aucune dépendance, aucune compilation. Progressive Web App (manifeste et service worker), données conservées en `localStorage`, hébergement GitHub Pages.
+
+Interface aux couleurs de la Tunisie : drapeau en en-tête, filet rouge et blanc, icônes de section dessinées en SVG. Le tampon d'auteur du bulletin est lui aussi un SVG, sans image externe — le document reste donc entièrement autonome et imprimable hors ligne.
 
 ---
 

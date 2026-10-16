@@ -22,9 +22,14 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-header{background:var(--navy);color:#fff;padding:calc(env(safe-area-inset-top) + 12px) 16px 12px;position:sticky;top:0;z-index:5}
+header{background:var(--navy);color:#fff;padding:calc(env(safe-area-inset-top) + 12px) 16px 13px;position:sticky;top:0;z-index:5}
 header h1{margin:0;font-size:17px;font-weight:700;letter-spacing:.2px}
 header p{margin:2px 0 0;font-size:12px;opacity:.75}
+header .hwrap{display:flex;align-items:center;gap:11px}
+header .flag{width:34px;height:23px;border-radius:3px;flex:0 0 auto;box-shadow:0 0 0 1px rgba(255,255,255,.25)}
+header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,#E70013 0 34%,#fff 34% 66%,#E70013 66%)}
+.card h2{display:flex;align-items:center;gap:7px}
+.card h2 svg{width:15px;height:15px;flex:0 0 auto;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.9}
 main{padding:12px 12px calc(84px + env(safe-area-inset-bottom));max-width:640px;margin:0 auto}
 .card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow);border:1px solid var(--line)}
 .card h2{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700}
@@ -125,20 +130,81 @@ table.p-tab tr.fill td{height:100%;padding:0;border-bottom:1px solid #000}
 .p-cg div+div{border-left:1px solid #000;justify-content:center}
 .bul-field label{margin-top:8px}
 
+/* ---------- modèle noir et blanc ---------- */
+.paper.bw{font:11px/1.35 "Segoe UI",Arial,Helvetica,sans-serif;padding:24px 26px 18px;position:relative;overflow:hidden}
+.paper.bw>*:not(.wm){position:relative;z-index:1}
+.wm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:0;overflow:hidden}
+.wm span{font-size:56px;font-weight:800;letter-spacing:8px;color:#000;opacity:.05;transform:rotate(-27deg);white-space:nowrap;text-transform:uppercase}
+.bw-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2.5px solid #000;padding-bottom:9px}
+.bw-head h1{margin:0;font-size:19px;letter-spacing:4px;font-weight:800;text-transform:uppercase}
+.bw-head .soc{font-size:12px;font-weight:700;margin-top:5px}
+.bw-head .adr{font-size:10px;margin-top:1px}
+.bw-head .per{text-align:right;font-size:10px;line-height:1.6}
+.bw-head .per b{display:block;font-size:14px;letter-spacing:1.5px;text-transform:uppercase}
+.bw-sub{border-top:1px solid #000;margin-top:2px;margin-bottom:14px}
+.bw-cols{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid #000;margin-bottom:12px}
+.bw-cols>div{padding:8px 11px}
+.bw-cols>div+div{border-left:1px solid #000}
+.bw-cols h3{margin:0 0 6px;font-size:9.5px;letter-spacing:2px;text-transform:uppercase;font-weight:800;border-bottom:1px solid #000;padding-bottom:4px}
+.bw-l{display:flex;gap:8px;padding:2px 0;align-items:baseline}
+.bw-l b{min-width:84px;font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.3px}
+.bw-l span{flex:1;font-weight:700}
+.bw-band{display:flex;flex-wrap:wrap;gap:0 18px;border:1px solid #000;border-top:0;margin:-12px 0 14px;padding:6px 11px;font-size:10.5px}
+.bw-band i{font-style:normal;text-transform:uppercase;letter-spacing:.4px}
+.bw-band i b{font-weight:800}
+table.bw-tab{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:0}
+table.bw-tab thead th{border-top:1px solid #000;border-bottom:1px solid #000;padding:6px 5px;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;font-weight:800;text-align:right}
+table.bw-tab thead th:first-child{text-align:left}
+table.bw-tab td{padding:4px 5px;text-align:right;white-space:nowrap}
+table.bw-tab td:first-child{text-align:left;white-space:normal}
+table.bw-tab tr.sec td{padding:10px 5px 3px;font-size:9.5px;letter-spacing:1.6px;text-transform:uppercase;font-weight:800}
+table.bw-tab tr.rule td{border-bottom:1px solid #000;padding:0;height:1px}
+table.bw-tab tr.tot td{font-weight:800;border-top:1px solid #000;border-bottom:1px solid #000}
+table.bw-tab tr.dim td{opacity:.72}
+.bw-net{display:flex;justify-content:space-between;align-items:center;border:2.5px solid #000;padding:10px 14px;margin:14px 0 14px}
+.bw-net span{font-size:10.5px;letter-spacing:2.4px;text-transform:uppercase;font-weight:800}
+.bw-net b{font-size:20px;font-weight:800;letter-spacing:.5px}
+.bw-foot{display:grid;grid-template-columns:1fr 212px;gap:16px;align-items:start}
+.bw-mini{width:100%;border-collapse:collapse;font-size:10px}
+.bw-mini th{text-align:left;font-size:9px;letter-spacing:1.2px;text-transform:uppercase;border-bottom:1px solid #000;padding:4px 5px;font-weight:800}
+.bw-mini td{padding:3px 5px;border-bottom:1px solid #bbb}
+.bw-mini td:last-child{text-align:right;font-weight:700}
+.bw-sg{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.bw-sg div b{display:block;font-size:9px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:5px}
+.bw-sg div i{display:block;border-bottom:1px solid #000;height:62px}
+.bw-seal{position:relative;text-align:center}
+.bw-seal svg{width:122px;height:122px;transform:rotate(-7deg);opacity:.88}
+.bw-seal p{margin:4px 0 0;font-size:8.5px;letter-spacing:.6px;line-height:1.45}
+.bw-copy{border-top:1px solid #000;margin-top:14px;padding-top:7px;display:flex;justify-content:space-between;font-size:8.5px;letter-spacing:.4px}
+
 @media print{
   @page{size:A4;margin:8mm}
   html,body{background:#fff !important}
   body *{visibility:hidden}
   #paper,#paper *{visibility:visible}
   #paper{position:absolute;left:0;top:0;transform:none !important;width:720px;padding:0}
+  .paper.bw{padding:4px 2px !important}
   .paper-wrap{overflow:visible;box-shadow:none;height:auto !important}
+  /* le filigrane et le tampon doivent sortir à l'impression */
+  .wm,.wm span,.bw-seal,.bw-seal svg{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 </style>
 </head>
 <body>
 <header>
-  <h1>Simulateur de paie</h1>
-  <p>Tunisie · CNSS, IRPP, CSS · hors ligne</p>
+  <div class="hwrap">
+    <svg class="flag" viewBox="0 0 60 40" role="img" aria-label="Drapeau de la Tunisie">
+      <rect width="60" height="40" fill="#E70013"/>
+      <circle cx="30" cy="20" r="12" fill="#fff"/>
+      <circle cx="30" cy="20" r="9" fill="#E70013"/>
+      <circle cx="32.2" cy="20" r="7.2" fill="#fff"/>
+      <path fill="#E70013" d="M33.5,14 L34.85,18.15 L39.21,18.15 L35.68,20.71 L37.03,24.85 L33.5,22.29 L29.97,24.85 L31.32,20.71 L27.79,18.15 L32.15,18.15 Z"/>
+    </svg>
+    <div>
+      <h1>Simulateur de paie</h1>
+      <p>Tunisie · CNSS, IRPP, CSS · hors ligne</p>
+    </div>
+  </div>
 </header>
 <main id="app"></main>
 <nav>
@@ -177,7 +243,7 @@ table.p-tab tr.fill td{height:100%;padding:0;border-bottom:1px solid #000}
 
   var now = new Date();
   var BUL_DEF = { societe: '', adresseSoc: '', affil: '', annee: String(now.getFullYear()), mois: MOIS[now.getMonth()],
-    matricule: '', cnssNo: '', emploi: '', categorie: '1', echelon: '1', regime: 'TEMPS PLEIN', adresse: '', cin: '', dept: '',
+    matricule: '', cnssNo: '', emploi: '', categorie: '1', echelon: '1', regime: 'TEMPS PLEIN', template: 'bw', adresse: '', cin: '', dept: '',
     paiement: 'Virement', banque: '', compte: '', acquis: '2', solde: '0' };
   var state = load(KEY_S) || {};
   var bul = Object.assign({}, BUL_DEF, state.bul || {});
@@ -227,6 +293,19 @@ table.p-tab tr.fill td{height:100%;padding:0;border-bottom:1px solid #000}
   function optionsHtml(list, sel) {
     return list.map(function (v) { return '<option value="' + esc(v) + '"' + (v === sel ? ' selected' : '') + '>' + esc(v) + '</option>'; }).join('');
   }
+  // petites icônes de section (tracé simple, couleur héritée du titre)
+  var ICONS = {
+    contrat: '<path d="M6 2h8l4 4v16H6z"/><path d="M14 2v5h5"/><path d="M9 12h7M9 16h5"/>',
+    jours: '<rect x="3" y="5" width="18" height="17" rx="2"/><path d="M3 10h18M8 2v5M16 2v5"/>',
+    heures: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
+    famille: '<circle cx="9" cy="8" r="3.4"/><path d="M2.5 21a6.5 6.5 0 0 1 13 0"/><circle cx="17.5" cy="10" r="2.6"/><path d="M15 21a5.6 5.6 0 0 1 6.5-5.4"/>',
+    primes: '<path d="M12 3l2.6 5.6L21 9.4l-4.6 4.3 1.2 6.3L12 17l-5.6 3 1.2-6.3L3 9.4l6.4-.8z"/>',
+    retenues: '<circle cx="12" cy="12" r="9"/><path d="M8 12h8"/>',
+    periode: '<rect x="3" y="5" width="18" height="17" rx="2"/><path d="M3 10h18M8 2v5M16 2v5"/>',
+    modele: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>',
+    infos: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.4"/>'
+  };
+  function ic(n) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + (ICONS[n] || '') + '</svg>'; }
   function pairsHtml(pairs, sel) {
     return pairs.map(function (p) { return '<option value="' + esc(p[0]) + '"' + (p[0] === sel ? ' selected' : '') + '>' + esc(p[1]) + '</option>'; }).join('');
   }
@@ -251,7 +330,7 @@ table.p-tab tr.fill td{height:100%;padding:0;border-bottom:1px solid #000}
     }).join('');
     $('#app').innerHTML =
       '<button class="install" id="installBtn">Installer l’application sur le téléphone</button>' +
-      '<div class="card"><h2>Contrat</h2>' +
+      '<div class="card"><h2>' + ic('contrat') + 'Contrat</h2>' +
       '<div class="row"><div><label>Nom du salarié (facultatif)</label><input type="text" data-k="name" value="' + esc(state.name) + '" placeholder="Nom et prénom"></div></div>' +
       '<div class="row"><div><label>Type de contrat</label><select data-k="contract">' + optionsHtml(contracts, state.contract) + '</select></div></div>' +
       '<div class="row c2"><div><label>Régime de paie</label><select data-k="regime">' +
@@ -263,7 +342,7 @@ table.p-tab tr.fill td{height:100%;padding:0;border-bottom:1px solid #000}
       '<label>Le contrat indique</label><div class="seg" role="group">' + modeBtns + '</div>' +
       '<p class="hint" id="modeHint"></p>' +
       '<div class="row" style="margin-top:12px"><div><label id="amountLab"></label><input type="text" inputmode="decimal" data-k="amount" value="' + esc(state.amount) + '"></div></div></div>' +
-      '<div class="card"><h2>' + (isH() ? 'Heures du mois' : 'Jours du mois') + '</h2>' +
+      '<div class="card"><h2>' + ic(isH() ? 'heures' : 'jours') + (isH() ? 'Heures du mois' : 'Jours du mois') + '</h2>' +
       (isH() ?
         '<div class="row c2"><div><label>Heures prévues (H.Prev)</label><input type="text" inputmode="decimal" data-k="hprev" value="' + esc(state.hprev) + '" placeholder="' + dj(hDef()) + '"></div>' +
         '<div><label>Heures travaillées</label><input type="text" inputmode="decimal" data-k="htrav" value="' + esc(state.htrav) + '" placeholder="auto"></div></div>' +
@@ -276,14 +355,14 @@ table.p-tab tr.fill td{height:100%;padding:0;border-bottom:1px solid #000}
         '<div class="row c2"><div><label>Jours fériés payés</label><input type="text" inputmode="decimal" data-k="feries" value="' + esc(state.feries) + '" placeholder="0"></div>' +
         '<div><label>Congés payés / maladie</label><input type="text" inputmode="decimal" data-k="conges" value="' + esc(state.conges) + '" placeholder="0"></div></div>') +
       '<div id="daysInfo"></div></div>' +
-      '<div class="card"><h2>Situation familiale</h2><div class="row c2">' +
+      '<div class="card"><h2>' + ic('famille') + 'Situation familiale</h2><div class="row c2">' +
       '<div><label>Chef de famille</label><div class="seg"><button data-act="chef" data-v="0" class="' + (!state.chef ? 'on' : '') + '">Non</button><button data-act="chef" data-v="1" class="' + (state.chef ? 'on' : '') + '">Oui</button></div></div>' +
       '<div><label>Enfants à charge</label><select data-k="enfants">' + [0, 1, 2, 3, 4, 5, 6].map(function (n) { return '<option value="' + n + '"' + (state.enfants === n ? ' selected' : '') + '>' + n + '</option>'; }).join('') + '</select></div></div></div>' +
-      '<div class="card"><h2>Primes (montant d’un mois complet)</h2><div id="primes">' + state.primes.map(primeHtml).join('') + '</div>' +
+      '<div class="card"><h2>' + ic('primes') + 'Primes (montant d’un mois complet)</h2><div id="primes">' + state.primes.map(primeHtml).join('') + '</div>' +
       '<button class="btn" data-act="addprime">+ Ajouter une prime</button>' +
       '<p class="hint">Les primes sont proratisées sur ' + (isH() ? 'les heures travaillées' : 'les jours travaillés') +
         (qte() === 1 ? '' : ', puis réduites de moitié (mi-temps)') + '.</p></div>' +
-      '<div class="card"><h2>Retenues sur le net</h2><div class="row c3">' +
+      '<div class="card"><h2>' + ic('retenues') + 'Retenues sur le net</h2><div class="row c3">' +
       '<div><label>Avance</label><input type="text" inputmode="decimal" data-k="avance" value="' + esc(state.avance) + '" placeholder="0"></div>' +
       '<div><label>Crédit</label><input type="text" inputmode="decimal" data-k="credit" value="' + esc(state.credit) + '" placeholder="0"></div>' +
       '<div><label>Pénalités</label><input type="text" inputmode="decimal" data-k="penal" value="' + esc(state.penal) + '" placeholder="0"></div></div></div>' +
@@ -359,8 +438,10 @@ table.p-tab tr.fill td{height:100%;padding:0;border-bottom:1px solid #000}
       return '<div class="bul-field"><label>' + x[1] + '</label><input type="text" data-b="' + x[0] + '" value="' + esc(bul[x[0]]) + '"></div>';
     }).join('');
     $('#app').innerHTML =
-      '<div class="card"><h2>Période</h2><div class="row c2"><div><label>Mois de paie</label><select data-b="mois">' + optionsHtml(MOIS, bul.mois) + '</select></div>' +
+      '<div class="card"><h2>' + ic('periode') + 'Période</h2><div class="row c2"><div><label>Mois de paie</label><select data-b="mois">' + optionsHtml(MOIS, bul.mois) + '</select></div>' +
       '<div><label>Année</label><input type="text" inputmode="numeric" data-b="annee" value="' + esc(bul.annee) + '"></div></div>' +
+      '<div class="row"><div><label>Modèle du bulletin</label><select data-b="template">' +
+        pairsHtml([['bw', 'Noir et blanc (avec tampon)'], ['classique', 'Classique']], bul.template) + '</select></div></div>' +
       '<p class="hint">Les montants viennent de l’onglet Simulateur (contrat, jours, primes).</p></div>' +
       '<div class="btns"><button class="btn solid" data-act="print">Imprimer / PDF</button><button class="btn ghost" style="border-style:solid" data-act="share">Partager</button></div>' +
       '<div class="paper-wrap" id="pwrap"><div class="paper" id="paper"></div></div>' +
@@ -368,8 +449,111 @@ table.p-tab tr.fill td{height:100%;padding:0;border-bottom:1px solid #000}
     updatePaper();
   }
   function tr(cls, cells) { return '<tr class="' + cls + '">' + cells.map(function (c, i) { return '<td' + (i > 0 ? ' class="r"' : '') + '>' + (c == null ? '' : c) + '</td>'; }).join('') + '</tr>'; }
+
+  /* ---------- modèle noir et blanc ---------- */
+  var AUTEUR = 'Aya Fekih Romdhane';
+  function sealSvg() {
+    return '<svg viewBox="0 0 160 160" role="img" aria-label="Tampon de l’auteur">' +
+      '<defs><path id="arcT" d="M 25,80 A 55,55 0 0 1 135,80"/><path id="arcB" d="M 33,80 A 47,47 0 0 0 127,80"/></defs>' +
+      '<circle cx="80" cy="80" r="74" fill="none" stroke="#111" stroke-width="3"/>' +
+      '<circle cx="80" cy="80" r="65" fill="none" stroke="#111" stroke-width="1.2"/>' +
+      '<text font-family="Arial,Helvetica,sans-serif" font-size="13" font-weight="700" letter-spacing="1.4" fill="#111">' +
+      '<textPath href="#arcT" startOffset="50%" text-anchor="middle">AYA FEKIH ROMDHANE</textPath></text>' +
+      '<text font-family="Arial,Helvetica,sans-serif" font-size="8.6" font-weight="700" letter-spacing="1.7" fill="#111">' +
+      '<textPath href="#arcB" startOffset="50%" text-anchor="middle">AUTEUR · DÉVELOPPEUR</textPath></text>' +
+      '<circle cx="80" cy="72" r="14" fill="#111"/><circle cx="83.4" cy="72" r="11.2" fill="#fff"/>' +
+      '<path fill="#111" d="M86.5,64.5 L88.26,69.9 L93.95,69.9 L89.34,73.24 L91.1,78.64 L86.5,75.3 L81.9,78.64 L83.66,73.24 L79.05,69.9 L84.74,69.9 Z"/>' +
+      '<path d="M62 94 H98" stroke="#111" stroke-width="1"/>' +
+      '<text x="80" y="107" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9.5" font-weight="700" letter-spacing="1.2" fill="#111">© 2026</text>' +
+      '</svg>';
+  }
+  function paperBW(r, c, D, U) {
+    var B = function (k) { return esc(bul[k]); };
+    var cell = function (v, cls) { return '<td' + (cls ? ' class="' + cls + '"' : '') + '>' + (v == null || v === '' ? '' : v) + '</td>'; };
+    var line = function (cells, cls) { return '<tr' + (cls ? ' class="' + cls + '"' : '') + '>' + cells.map(function (v) { return cell(v); }).join('') + '</tr>'; };
+    var sec = function (t) { return '<tr class="sec"><td colspan="6">' + t + '</td></tr><tr class="rule"><td colspan="6"></td></tr>'; };
+    var nb = r.horaire ? ' h' : ' j';
+
+    var rows = sec('Gains');
+    rows += line(['Salaire de base', f1(U.trav) + nb, f5(r.rate), fp(U.trav / U.prev), f3(r.gBase), '']);
+    if (U.con) rows += line(['Congés payés / maladie', f1(U.con) + nb, f5(r.rate), fp(U.con / U.prev), f3(r.gCon), '']);
+    if (U.fer) rows += line([(r.horaire ? 'Heures fériées' : 'Jours fériés'), f1(U.fer) + nb, f5(r.rate), fp(U.fer / U.prev), f3(r.gFer), '']);
+    if (U.abs) rows += line(['Absences non payées', f1(U.abs) + nb, '', fp(U.abs / U.prev), f3(r.gAbs), ''], 'dim');
+    r.primes.forEach(function (p) { rows += line([esc(p.name), f1(U.trav) + nb, f5(p.full / U.prev), '', f3(p.amount), '']); });
+    rows += line(['Total brut', '', '', '', f3(r.brut), ''], 'tot');
+
+    rows += sec('Retenues salariales');
+    rows += line(['Retenue CNSS', '', f3(r.brutCot), pct(c.cnssS || 0), '', f3(r.cnss)]);
+    rows += line(['IRPP', '', f3(r.impMens), '', '', f3(r.irpp)]);
+    if (r.css) rows += line(['Contribution Sociale Solidaire', '', f3(r.rni / 12), pct(params.fiscal.cssRate), '', f3(r.css)]);
+    rows += line(['Total des retenues', '', '', '', '', f3(r.retenues)], 'tot');
+
+    if (r.autres) {
+      rows += sec('Autres retenues');
+      if (WP.num(state.avance)) rows += line(['Avance', '', '', '', '', f3(WP.num(state.avance))]);
+      if (WP.num(state.credit)) rows += line(['Remboursement crédit', '', '', '', '', f3(WP.num(state.credit))]);
+      if (WP.num(state.penal)) rows += line(['Pénalités', '', '', '', '', f3(WP.num(state.penal))]);
+    }
+
+    rows += sec('Charges patronales (information)');
+    rows += line(['CNSS patronale', '', f3(r.brutCot), pct(c.cnssP || 0), '', f3(r.patr)], 'dim');
+    rows += line(['Accident du travail', '', f3(r.brutCot), pct(c.at || 0), '', f3(r.at)], 'dim');
+    rows += line(['TFP', '', f3(r.brutCot), pct(c.tfp || 0), '', f3(r.tfp)], 'dim');
+    rows += line(['FOPROLOS', '', f3(r.brutCot), pct(c.foprolos || 0), '', f3(r.fop)], 'dim');
+    rows += line(['Coût total employeur', '', '', '', '', f3(r.cout)], 'tot');
+
+    var band = '<i>Contrat <b>' + esc(state.contract) + '</b></i><i>Régime <b>' + regimeLabel() + '</b></i>' +
+      '<i>J.Prev <b>' + dj(D.prev) + ' j</b></i>' + (r.horaire ? '<i>H.Prev <b>' + dj(U.prev) + ' h</b></i>' : '') +
+      '<i>Base <b>' + (r.horaire ? f5(r.rate) + ' DT/h' : f3(r.baseMois) + ' DT') + '</b></i>' +
+      '<i>Situation <b>' + (state.chef ? 'Chef de famille' : 'Célibataire') + '</b></i>' +
+      '<i>Enfants <b>' + state.enfants + '</b></i>';
+
+    return '<div class="wm"><span>' + esc(AUTEUR) + '</span></div>' +
+      '<div class="bw-head"><div><h1>Bulletin de paie</h1>' +
+        '<div class="soc">' + (B('societe') || '—') + '</div><div class="adr">' + B('adresseSoc') +
+        (bul.affil ? ' · Affiliation CNSS ' + B('affil') : '') + '</div></div>' +
+        '<div class="per">Période de paie<b>' + B('mois') + ' ' + B('annee') + '</b>Édité le ' + new Date().toLocaleDateString('fr-FR') + '</div></div>' +
+      '<div class="bw-sub"></div>' +
+      '<div class="bw-cols"><div><h3>Employeur</h3>' +
+        '<div class="bw-l"><b>Société</b><span>' + (B('societe') || '—') + '</span></div>' +
+        '<div class="bw-l"><b>Adresse</b><span>' + (B('adresseSoc') || '—') + '</span></div>' +
+        '<div class="bw-l"><b>Affiliation</b><span>' + (B('affil') || '—') + '</span></div>' +
+        '<div class="bw-l"><b>Département</b><span>' + (B('dept') || '—') + '</span></div></div>' +
+      '<div><h3>Salarié</h3>' +
+        '<div class="bw-l"><b>Nom</b><span>' + (esc(state.name) || '—') + '</span></div>' +
+        '<div class="bw-l"><b>Emploi</b><span>' + (B('emploi') || '—') + '</span></div>' +
+        '<div class="bw-l"><b>Matricule</b><span>' + (B('matricule') || '—') + '</span></div>' +
+        '<div class="bw-l"><b>N° CNSS</b><span>' + (B('cnssNo') || '—') + '</span></div>' +
+        '<div class="bw-l"><b>CIN</b><span>' + (B('cin') || '—') + '</span></div></div></div>' +
+      '<div class="bw-band">' + band + '</div>' +
+      '<table class="bw-tab"><thead><tr><th>Désignation</th><th>Nombre</th><th>Base</th><th>Taux</th><th>Gain</th><th>Retenue</th></tr></thead>' +
+        '<tbody>' + rows + '</tbody></table>' +
+      '<div class="bw-net"><span>Net à payer</span><b>' + f3(r.netAPayer) + ' DT</b></div>' +
+      '<div class="bw-foot"><div>' +
+        '<table class="bw-mini"><tr><th colspan="2">Congés</th></tr>' +
+          '<tr><td>Congés pris ce mois (payé / maladie)</td><td>' + f1(U.con) + nb + '</td></tr>' +
+          '<tr><td>Congés acquis ce mois</td><td>' + f1(WP.num(bul.acquis)) + ' j</td></tr>' +
+          '<tr><td>Solde congé payé</td><td>' + f1(WP.num(bul.solde)) + ' j</td></tr>' +
+          '<tr><td>' + (r.horaire ? 'Heures' : 'Jours') + ' d’absence</td><td>' + f1(U.abs) + nb + '</td></tr></table>' +
+        '<table class="bw-mini" style="margin-top:10px"><tr><th colspan="2">Paiement</th></tr>' +
+          '<tr><td>Mode</td><td>' + (B('paiement') || '—') + '</td></tr>' +
+          '<tr><td>Banque</td><td>' + (B('banque') || '—') + '</td></tr>' +
+          '<tr><td>N° de compte</td><td>' + (B('compte') || '—') + '</td></tr></table>' +
+        '<div class="bw-sg"><div><b>Signature et cachet employeur</b><i></i></div><div><b>Signature employé</b><i></i></div></div></div>' +
+      '<div class="bw-seal">' + sealSvg() + '<p><b>' + esc(AUTEUR) + '</b><br>Conception et développement<br>du simulateur de paie</p></div></div>' +
+      '<div class="bw-copy"><span>Simulateur de paie — Tunisie · document généré à titre indicatif</span>' +
+        '<span>© 2026 ' + esc(AUTEUR) + ' — tous droits réservés</span></div>';
+  }
   function updatePaper() {
     var r = calc(), c = params.contracts[state.contract] || {}, D = r.days, U = r.units;
+    var sheet = $('#paper');
+    if (bul.template !== 'classique') {
+      sheet.className = 'paper bw';
+      sheet.innerHTML = paperBW(r, c, D, U);
+      window._last = r;
+      return;
+    }
+    sheet.className = 'paper';
     var sit = state.chef ? 'CHEF DE FAMILLE' : 'CELIBATAIRE';
     var rows = '';
     rows += tr('', ['Salaire de base', f1(U.trav), f5(r.rate), fp(U.trav / U.prev), f3(r.gBase), '', '', '']);
