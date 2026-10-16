@@ -50,6 +50,7 @@ input:focus,select:focus{outline:2px solid var(--accent);outline-offset:0;border
 .btn.solid{border:0;background:var(--accent);color:#fff}
 .btn.ghost{border:1px solid var(--line);color:var(--ink)}
 .btn.danger{border:1px solid var(--bad);color:var(--bad)}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .hero{background:linear-gradient(135deg,var(--navy),#2c4f8f);color:#fff;border:0}
 .hero .lab{font-size:12px;opacity:.8;text-transform:uppercase;letter-spacing:.6px}
 .hero .big{font-size:34px;font-weight:800;margin:4px 0 2px;font-variant-numeric:tabular-nums}
@@ -57,13 +58,15 @@ input:focus,select:focus{outline:2px solid var(--accent);outline-offset:0;border
 .kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
 .kv:last-child{border-bottom:0}
 .kv span:first-child{color:var(--muted)}
-.kv b{font-weight:700}
+.kv b{font-weight:700;white-space:nowrap}
 .kv.tot{font-weight:800}
 .kv.tot span:first-child{color:var(--ink)}
-.neg{color:var(--bad)}
 .pill{display:inline-block;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px}
 .pill.ok{background:var(--good-soft);color:var(--good)}
 .pill.warn{background:var(--warn-soft);color:var(--warn)}
+.note{font-size:13px;margin-top:10px;padding:8px 10px;border-radius:10px}
+.note.warn{background:var(--warn-soft);color:var(--warn)}
+.note.info{background:var(--accent-soft);color:var(--accent)}
 details summary{cursor:pointer;font-weight:700;color:var(--accent);padding:6px 0;min-height:36px}
 nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:6}
 nav button{flex:1;border:0;background:transparent;color:var(--muted);padding:10px 4px 9px;font-size:12px;font-weight:700;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:56px}
@@ -73,10 +76,63 @@ table.t{width:100%;border-collapse:collapse;font-size:13px}
 table.t th{font-size:11px;color:var(--muted);text-align:left;padding:4px 4px 6px;font-weight:700}
 table.t td{padding:3px 3px}
 table.t input[type=text],table.t input[type=number]{padding:8px 8px;font-size:14px;min-height:38px}
-.chk{display:flex;align-items:center;gap:8px;font-size:14px;min-height:40px}
-.chk input{width:22px;height:22px;accent-color:var(--accent)}
 .toast{position:fixed;left:50%;bottom:calc(76px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#222c;color:#fff;padding:10px 16px;border-radius:99px;font-size:13px;z-index:9;backdrop-filter:blur(6px)}
 .install{display:none;background:var(--accent-soft);color:var(--accent);font-weight:700;text-align:center;padding:10px;border-radius:12px;margin-bottom:12px;border:0;width:100%;font-family:inherit;font-size:14px;min-height:44px}
+
+/* ---------- bulletin (template papier, toujours clair) ---------- */
+.paper-wrap{width:100%;margin-bottom:12px;overflow:hidden;border-radius:6px;box-shadow:var(--shadow)}
+.paper{width:720px;background:#fff;color:#000;font:11px/1.25 Arial,Helvetica,sans-serif;padding:14px 14px 16px;transform-origin:top left}
+.paper *{box-sizing:border-box}
+.p-title{text-align:center;font-size:17px;font-weight:700;text-decoration:underline;margin:4px 0 14px}
+.p-top{display:flex;justify-content:space-between;gap:70px;margin-bottom:14px}
+.pbox{border:1px solid #000;padding:4px 6px}
+.p-soc{flex:1}
+.p-soc div,.p-per div{font-weight:700;padding:3px 0}
+.p-per{width:240px}
+.p-per span{display:inline-block;min-width:92px}
+.p-per span+span{font-weight:400}
+.p-emp{display:grid;grid-template-columns:205px 1fr 195px;border:1px solid #000;margin-bottom:14px}
+.p-emp>div{padding:5px 7px}
+.p-emp>div+div{border-left:1px solid #000}
+.p-emp .l{display:flex;align-items:baseline;gap:6px;padding:3px 0}
+.p-emp .l b{display:inline-block;min-width:78px}
+.p-emp .l .v{font-weight:400}
+.p-emp .col3 .l b{min-width:64px}
+.p-emp .cat{display:flex;gap:6px;align-items:baseline;padding:3px 0}
+.p-emp .cat b{min-width:78px}
+table.p-tab{width:100%;border-collapse:collapse;border:0;font-size:11px;height:560px}
+table.p-tab th{border:1px solid #000;padding:5px 3px;font-weight:700;text-align:center}
+table.p-tab th.nb{border:0 !important}
+table.p-tab td{padding:3px 5px;border-left:1px solid #000;border-right:1px solid #000;vertical-align:middle;white-space:nowrap}
+table.p-tab td.r{text-align:right}
+table.p-tab tr.b td{font-weight:700}
+table.p-tab tr.sp td{height:12px;padding:0}
+table.p-tab tr.fill td{height:100%;padding:0;border-bottom:1px solid #000}
+.p-net{border:1px solid #000;border-top:0;text-align:right;padding:8px 8px 6px;font-weight:700;margin-bottom:12px}
+.p-net div+div{margin-top:6px}
+.p-foot{display:grid;grid-template-columns:1fr 150px;gap:14px}
+.p-pay{display:grid;grid-template-columns:130px 1fr 1fr;border:1px solid #000}
+.p-pay div{padding:4px 6px;text-align:center;border-bottom:1px solid #000;border-right:1px solid #000;overflow:hidden}
+.p-pay div:nth-child(3n){border-right:0}
+.p-pay div:nth-child(-n+3){font-weight:700;text-align:left}
+.p-pay div:nth-child(n+4){border-bottom:0}
+.p-sign{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
+.p-sign b{display:block;margin-bottom:6px}
+.p-sign div div{border:1px solid #000;height:82px}
+.p-cg{display:grid;grid-template-columns:1fr 54px;border:1px solid #000;border-bottom:0}
+.p-cg:last-child{border-bottom:1px solid #000}
+.p-cg div{padding:5px 5px;min-height:34px;display:flex;align-items:center}
+.p-cg div+div{border-left:1px solid #000;justify-content:center}
+.bul-field label{margin-top:8px}
+
+@media print{
+  @page{size:A4;margin:8mm}
+  html,body{background:#fff !important}
+  body *{visibility:hidden}
+  #paper,#paper *{visibility:visible}
+  #paper{position:absolute;left:0;top:0;transform:none !important;width:720px;padding:0}
+  .paper-wrap{overflow:visible;box-shadow:none;height:auto !important}
+}
 </style>
 </head>
 <body>
@@ -87,7 +143,10 @@ table.t input[type=text],table.t input[type=number]{padding:8px 8px;font-size:14
 <main id="app"></main>
 <nav>
   <button id="tab-sim" class="on" data-tab="sim">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 12h2M12 12h2M16 12h0M8 16h2M12 16h2M16 16h0"/></svg>Simulateur
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 12h2M12 12h2M8 16h2M12 16h2"/></svg>Simulateur
+  </button>
+  <button id="tab-bul" data-tab="bul">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6z"/><path d="M9 11h6M9 15h6M9 7h3"/></svg>Bulletin
   </button>
   <button id="tab-par" data-tab="par">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Paramètres
@@ -97,37 +156,44 @@ table.t input[type=text],table.t input[type=number]{padding:8px 8px;font-size:14
 <script>
 (function () {
   'use strict';
-  var KEY_P = 'wp_params_v1', KEY_S = 'wp_state_v1';
+  var KEY_P = 'wp_params_v1', KEY_S = 'wp_state_v2';
   var MODE_LABELS = { net: 'Salaire net', gross: 'Salaire brut', cot: 'Salaire brut cotisable', base: 'Salaire de base' };
   var SHORT = { net: 'Net', gross: 'Brut', cot: 'Brut cotis.', base: 'Base' };
   var MODE_HINTS = {
-    net: 'Le contrat indique le net (avant avance, primes comprises). Le salaire de base est déduit.',
-    gross: 'Le contrat indique le brut total (base + primes). Le salaire de base est déduit.',
-    cot: 'Le contrat indique base + primes cotisables. Le salaire de base est déduit.',
-    base: 'Vous saisissez directement le salaire de base.'
+    net: 'Le contrat indique le net d’un mois complet (avant avance, primes comprises). Le salaire de base est déduit.',
+    gross: 'Le contrat indique le brut total d’un mois complet (base + primes). Le salaire de base est déduit.',
+    cot: 'Le contrat indique base + primes cotisables (mois complet). Le salaire de base est déduit.',
+    base: 'Vous saisissez directement le salaire de base mensuel.'
   };
+  var MOIS = ['JANVIER', 'FÉVRIER', 'MARS', 'AVRIL', 'MAI', 'JUIN', 'JUILLET', 'AOÛT', 'SEPTEMBRE', 'OCTOBRE', 'NOVEMBRE', 'DÉCEMBRE'];
   var clone = function (o) { return JSON.parse(JSON.stringify(o)); };
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]; }); };
-
   function load(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
   function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 
   var params = load(KEY_P);
   if (!params || !params.contracts || !params.fiscal || !params.bareme || !params.catalog) params = clone(WP.DEFAULT_PARAMS);
-  var uid = 0;
+
+  var now = new Date();
+  var BUL_DEF = { societe: '', adresseSoc: '', affil: '', annee: String(now.getFullYear()), mois: MOIS[now.getMonth()],
+    matricule: '', cnssNo: '', emploi: '', categorie: '1', echelon: '1', regime: 'TEMPS PLEIN', adresse: '', cin: '', dept: '',
+    paiement: 'Virement', banque: '', compte: '', acquis: '2', solde: '0' };
   var state = load(KEY_S) || {};
-  state = Object.assign({ name: '', contract: 'CDI', mode: 'net', amount: '1800', chef: false, enfants: 0, avance: '', credit: '', penal: '', primes: [] }, state);
+  var bul = Object.assign({}, BUL_DEF, state.bul || {});
+  state = Object.assign({ name: '', contract: 'CDI', mode: 'net', amount: '1800', chef: false, enfants: 0, prev: '26', trav: '', feries: '', conges: '',
+    avance: '', credit: '', penal: '', primes: [] }, state);
+  state.bul = bul;
   if (!params.contracts[state.contract]) state.contract = Object.keys(params.contracts)[0];
+  var uid = 0;
   state.primes.forEach(function (p) { p.id = ++uid; });
   var tab = 'sim';
 
-  // ---------- formatage ----------
   var nf = new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
   var fm = function (x) { return nf.format(x); };
   var pct = function (x) { return String(Math.round(x * 100000) / 1000).replace('.', ',') + ' %'; };
+  var dj = function (x) { return String(Math.round(x * 100) / 100).replace('.', ','); };
 
-  // ---------- calcul ----------
   function catInfo(name) {
     var n = String(name || '').trim().toLowerCase();
     for (var i = 0; i < params.catalog.length; i++) if (params.catalog[i].name.trim().toLowerCase() === n) return params.catalog[i];
@@ -137,18 +203,17 @@ table.t input[type=text],table.t input[type=number]{padding:8px 8px;font-size:14
     return {
       params: params, contract: state.contract, chef: state.chef, enfants: state.enfants,
       avance: state.avance, credit: state.credit, penal: state.penal,
+      days: { prev: state.prev, trav: state.trav, feries: state.feries, conges: state.conges },
       primes: state.primes.filter(function (p) { return p.name; }).map(function (p) {
         var c = catInfo(p.name);
         return { name: p.name, cot: !!(c && c.cot), imp: !!(c && c.imp), mode: p.mode, value: p.mode === 'pct' ? WP.num(p.value) / 100 : WP.num(p.value) };
       })
     };
   }
-  function calc() {
-    var ctx = buildCtx();
-    return { ctx: ctx, r: WP.solve(state.mode, state.amount, ctx) };
-  }
+  function calc() { return WP.solve(state.mode, state.amount, buildCtx()); }
+  function persist() { save(KEY_S, state); }
 
-  // ---------- rendu simulateur ----------
+  /* ================= SIMULATEUR ================= */
   function optionsHtml(list, sel) {
     return list.map(function (v) { return '<option value="' + esc(v) + '"' + (v === sel ? ' selected' : '') + '>' + esc(v) + '</option>'; }).join('');
   }
@@ -162,7 +227,7 @@ table.t input[type=text],table.t input[type=number]{padding:8px 8px;font-size:14
       '<div class="row c2" style="margin-top:10px"><div><label>Type</label><select data-f="mode">' +
       '<option value="fixed"' + (p.mode === 'fixed' ? ' selected' : '') + '>Montant (DT)</option>' +
       '<option value="pct"' + (p.mode === 'pct' ? ' selected' : '') + '>% du base</option></select></div>' +
-      '<div><label>' + (p.mode === 'pct' ? 'Pourcentage (%)' : 'Montant (DT)') + '</label><input type="text" inputmode="decimal" data-f="value" value="' + esc(p.value) + '" placeholder="0"></div></div>' +
+      '<div><label>' + (p.mode === 'pct' ? 'Pourcentage (%)' : 'Montant mensuel (DT)') + '</label><input type="text" inputmode="decimal" data-f="value" value="' + esc(p.value) + '" placeholder="0"></div></div>' +
       '<div class="tags"><span class="tag ' + (c && c.cot ? 'yes' : '') + '">Cotisable : ' + (c && c.cot ? 'oui' : 'non') + '</span>' +
       '<span class="tag ' + (c && c.imp ? 'yes' : '') + '">Imposable : ' + (c && c.imp ? 'oui' : 'non') + '</span></div></div>';
   }
@@ -177,13 +242,20 @@ table.t input[type=text],table.t input[type=number]{padding:8px 8px;font-size:14
       '<div class="row"><div><label>Nom du salarié (facultatif)</label><input type="text" data-k="name" value="' + esc(state.name) + '" placeholder="Nom et prénom"></div></div>' +
       '<div class="row"><div><label>Type de contrat</label><select data-k="contract">' + optionsHtml(contracts, state.contract) + '</select></div></div>' +
       '<label>Le contrat indique</label><div class="seg" role="group">' + modeBtns + '</div>' +
-      '<p class="hint" id="modeHint">' + MODE_HINTS[state.mode] + '</p>' +
-      '<div class="row" style="margin-top:12px"><div><label id="amountLab">' + MODE_LABELS[state.mode] + ' (DT / mois)</label><input type="text" inputmode="decimal" data-k="amount" value="' + esc(state.amount) + '"></div></div></div>' +
+      '<p class="hint" id="modeHint"></p>' +
+      '<div class="row" style="margin-top:12px"><div><label id="amountLab"></label><input type="text" inputmode="decimal" data-k="amount" value="' + esc(state.amount) + '"></div></div></div>' +
+      '<div class="card"><h2>Jours du mois</h2>' +
+      '<div class="row c2"><div><label>Jours prévus (J.Prev)</label><input type="text" inputmode="decimal" data-k="prev" value="' + esc(state.prev) + '"></div>' +
+      '<div><label>Jours travaillés</label><input type="text" inputmode="decimal" data-k="trav" id="travInp" value="' + esc(state.trav) + '" placeholder="auto"></div></div>' +
+      '<div class="row c2"><div><label>Jours fériés payés</label><input type="text" inputmode="decimal" data-k="feries" value="' + esc(state.feries) + '" placeholder="0"></div>' +
+      '<div><label>Congés payés / maladie</label><input type="text" inputmode="decimal" data-k="conges" value="' + esc(state.conges) + '" placeholder="0"></div></div>' +
+      '<div id="daysInfo"></div></div>' +
       '<div class="card"><h2>Situation familiale</h2><div class="row c2">' +
       '<div><label>Chef de famille</label><div class="seg"><button data-act="chef" data-v="0" class="' + (!state.chef ? 'on' : '') + '">Non</button><button data-act="chef" data-v="1" class="' + (state.chef ? 'on' : '') + '">Oui</button></div></div>' +
       '<div><label>Enfants à charge</label><select data-k="enfants">' + [0, 1, 2, 3, 4, 5, 6].map(function (n) { return '<option value="' + n + '"' + (state.enfants === n ? ' selected' : '') + '>' + n + '</option>'; }).join('') + '</select></div></div></div>' +
-      '<div class="card"><h2>Primes</h2><div id="primes">' + state.primes.map(primeHtml).join('') + '</div>' +
-      '<button class="btn" data-act="addprime">+ Ajouter une prime</button></div>' +
+      '<div class="card"><h2>Primes (montant d’un mois complet)</h2><div id="primes">' + state.primes.map(primeHtml).join('') + '</div>' +
+      '<button class="btn" data-act="addprime">+ Ajouter une prime</button>' +
+      '<p class="hint">Les primes sont proratisées sur les jours travaillés.</p></div>' +
       '<div class="card"><h2>Retenues sur le net</h2><div class="row c3">' +
       '<div><label>Avance</label><input type="text" inputmode="decimal" data-k="avance" value="' + esc(state.avance) + '" placeholder="0"></div>' +
       '<div><label>Crédit</label><input type="text" inputmode="decimal" data-k="credit" value="' + esc(state.credit) + '" placeholder="0"></div>' +
@@ -194,15 +266,19 @@ table.t input[type=text],table.t input[type=number]{padding:8px 8px;font-size:14
   }
   function kv(l, v, cls) { return '<div class="kv ' + (cls || '') + '"><span>' + l + '</span><b>' + v + '</b></div>'; }
   function updateResults() {
-    var out = calc(), r = out.r, c = params.contracts[state.contract] || {};
-    var ecart = state.mode === 'net' ? WP.r3(r.net - WP.r3(WP.num(state.amount))) : null;
-    var html = '<div class="card hero"><div class="lab">Net à payer</div><div class="big">' + fm(r.netAPayer) + ' DT</div>' +
-      '<div class="sub">Salaire de base : <b>' + fm(r.base) + ' DT</b> · Brut : <b>' + fm(r.brut) + ' DT</b></div>' +
+    var r = calc(), c = params.contracts[state.contract] || {}, D = r.days;
+    var partial = D.trav !== D.prev || D.fer > 0 || D.con > 0;
+    var ecart = state.mode === 'net' ? WP.r3(r.full.net - WP.r3(WP.num(state.amount))) : null;
+    var html = '<div class="card hero"><div class="lab">Net à payer du mois</div><div class="big">' + fm(r.netAPayer) + ' DT</div>' +
+      '<div class="sub">Salaire de base : <b>' + fm(r.base) + ' DT</b> · Brut du mois : <b>' + fm(r.brut) + ' DT</b></div>' +
+      (partial ? '<div class="sub" style="margin-top:4px">Mois complet : net <b>' + fm(r.full.net) + ' DT</b></div>' : '') +
       (ecart !== null ? '<div style="margin-top:10px"><span class="pill ' + (Math.abs(ecart) <= 0.0011 ? 'ok' : 'warn') + '">' +
         (Math.abs(ecart) <= 0.0011 ? 'Net du contrat atteint' : 'Écart avec le net du contrat : ' + fm(ecart) + ' DT') + '</span></div>' : '') +
       '</div>';
-    html += '<div class="card"><h2>Bulletin</h2>' +
-      kv('Salaire de base', fm(r.base)) +
+    html += '<div class="card"><h2>Détail du mois</h2>' +
+      kv('Salaire de base' + (partial ? ' (' + dj(D.trav) + ' j / ' + dj(D.prev) + ')' : ''), fm(r.gBase)) +
+      (D.fer ? kv('Jours fériés (' + dj(D.fer) + ' j)', fm(r.gFer)) : '') +
+      (D.con ? kv('Congés payés / maladie (' + dj(D.con) + ' j)', fm(r.gCon)) : '') +
       r.primes.map(function (p) { return kv(esc(p.name) + (p.mode === 'pct' ? ' (' + pct(p.value) + ')' : ''), fm(p.amount)); }).join('') +
       kv('Total brut', fm(r.brut), 'tot') +
       kv('CNSS salariale (' + pct(c.cnssS || 0) + ')', '− ' + fm(r.cnss)) +
@@ -218,20 +294,123 @@ table.t input[type=text],table.t input[type=number]{padding:8px 8px;font-size:14
       kv('CNSS patronale (' + pct(c.cnssP || 0) + ')', fm(r.patr)) + kv('Accident du travail (' + pct(c.at || 0) + ')', fm(r.at)) +
       kv('TFP (' + pct(c.tfp || 0) + ')', fm(r.tfp)) + kv('FOPROLOS (' + pct(c.foprolos || 0) + ')', fm(r.fop)) +
       kv('Coût total employeur', fm(r.cout), 'tot') + '</details></div>' +
-      '<button class="btn solid" data-act="share">Partager le résultat</button>';
+      '<div class="btns"><button class="btn solid" data-act="gobul">Voir le bulletin</button><button class="btn ghost" style="border-style:solid" data-act="share">Partager</button></div>';
     $('#results').innerHTML = html;
     $('#modeHint').textContent = MODE_HINTS[state.mode];
-    $('#amountLab').textContent = MODE_LABELS[state.mode] + ' (DT / mois)';
+    $('#amountLab').textContent = MODE_LABELS[state.mode] + ' (DT / mois complet)';
+    var info = '<div class="note info">Absences non payées : <b>' + dj(D.abs) + ' j</b>' + (D.auto ? ' · jours travaillés calculés : <b>' + dj(D.trav) + ' j</b>' : '') + '</div>';
+    if (D.over) info += '<div class="note warn">Travaillés + fériés + congés dépassent les jours prévus (' + dj(D.prev) + ').</div>';
+    $('#daysInfo').innerHTML = info;
     window._last = r;
   }
   function shareText() {
-    var r = window._last, c = state.contract;
-    return (state.name ? state.name + ' — ' : '') + 'Contrat ' + c + '\n' +
+    var r = window._last;
+    return (state.name ? state.name + ' — ' : '') + 'Contrat ' + state.contract + ' · ' + bul.mois + ' ' + bul.annee + '\n' +
+      'Jours : ' + dj(r.days.trav) + ' travaillés / ' + dj(r.days.prev) + ' prévus' + (r.days.fer ? ' · ' + dj(r.days.fer) + ' fériés' : '') + (r.days.con ? ' · ' + dj(r.days.con) + ' congés' : '') + '\n' +
       'Salaire de base : ' + fm(r.base) + ' DT\nBrut : ' + fm(r.brut) + ' DT\nCNSS : ' + fm(r.cnss) + ' · IRPP : ' + fm(r.irpp) + ' · CSS : ' + fm(r.css) +
       '\nNet : ' + fm(r.net) + ' DT\nNet à payer : ' + fm(r.netAPayer) + ' DT';
   }
 
-  // ---------- rendu paramètres ----------
+  /* ================= BULLETIN ================= */
+  var f3 = function (x) { return (Math.abs(x) < 5e-10 ? 0 : x).toFixed(3).replace('.', ','); };
+  var f1 = function (x) { return x.toFixed(1).replace('.', ','); };
+  var f5 = function (x) { return x.toFixed(5).replace('.', ','); };
+  var fp = function (x) { return (x * 100).toFixed(2).replace('.', ',') + '%'; };
+  var BUL_FIELDS = [
+    ['societe', 'Société'], ['adresseSoc', 'Adresse de la société'], ['affil', 'Affiliation CNSS société'],
+    ['matricule', 'Matricule'], ['cnssNo', 'N° CNSS du salarié'], ['emploi', 'Emploi'], ['categorie', 'Catégorie'], ['echelon', 'Échelon'],
+    ['regime', 'Régime horaire'], ['adresse', 'Adresse du salarié'], ['cin', 'CIN'], ['dept', 'Département'],
+    ['paiement', 'Mode de paiement'], ['banque', 'Intitulé banque'], ['compte', 'N° de compte'], ['acquis', 'Congés acquis ce mois (j)'], ['solde', 'Solde congé payé (j)']
+  ];
+  function renderBul() {
+    var f = BUL_FIELDS.map(function (x) {
+      return '<div class="bul-field"><label>' + x[1] + '</label><input type="text" data-b="' + x[0] + '" value="' + esc(bul[x[0]]) + '"></div>';
+    }).join('');
+    $('#app').innerHTML =
+      '<div class="card"><h2>Période</h2><div class="row c2"><div><label>Mois de paie</label><select data-b="mois">' + optionsHtml(MOIS, bul.mois) + '</select></div>' +
+      '<div><label>Année</label><input type="text" inputmode="numeric" data-b="annee" value="' + esc(bul.annee) + '"></div></div>' +
+      '<p class="hint">Les montants viennent de l’onglet Simulateur (contrat, jours, primes).</p></div>' +
+      '<div class="btns"><button class="btn solid" data-act="print">Imprimer / PDF</button><button class="btn ghost" style="border-style:solid" data-act="share">Partager</button></div>' +
+      '<div class="paper-wrap" id="pwrap"><div class="paper" id="paper"></div></div>' +
+      '<div class="card"><details><summary>Informations du bulletin (société, salarié, banque)</summary>' + f + '</details></div>';
+    updatePaper();
+  }
+  function tr(cls, cells) { return '<tr class="' + cls + '">' + cells.map(function (c, i) { return '<td' + (i > 0 ? ' class="r"' : '') + '>' + (c == null ? '' : c) + '</td>'; }).join('') + '</tr>'; }
+  function updatePaper() {
+    var r = calc(), c = params.contracts[state.contract] || {}, D = r.days;
+    var sit = state.chef ? 'CHEF DE FAMILLE' : 'CELIBATAIRE';
+    var rows = '';
+    rows += tr('', ['Salaire de base', f1(D.trav), f5(r.daily), fp(D.trav / D.prev), f3(r.gBase), '', '', '']);
+    rows += tr('', ['Congé(s) payé(s) / maladie', f1(D.con), f5(r.daily), fp(D.con / D.prev), f3(r.gCon), '', '', '']);
+    rows += tr('', ['Jours fériés', f1(D.fer), f5(r.daily), fp(D.fer / D.prev), f3(r.gFer), '', '', '']);
+    rows += tr('', ['Absences non payées', f1(D.abs), '', fp(D.abs / D.prev), D.abs > 0 ? f3(r.gAbs) : '', '', '', '']);
+    r.primes.forEach(function (p) { rows += tr('', [esc(p.name), f1(D.trav), f5(p.full / D.prev), '', f3(p.amount), '', '', '']); });
+    rows += tr('sp', ['', '', '', '', '', '', '', '']);
+    rows += tr('b', ['Total Brut', '', '', '', f3(r.brut), '', '', '']);
+    rows += tr('sp', ['', '', '', '', '', '', '', '']);
+    rows += tr('', ['Retenue CNSS', '', f3(r.brutCot), fp(c.cnssS || 0), '', f3(r.cnss), '', '']);
+    rows += tr('', ['Contribution patronale', '', f3(r.brutCot), '', '', '', fp(c.cnssP || 0), f3(r.patr)]);
+    rows += tr('', ['Cotisation accident de travail', '', f3(r.brutCot), '', '', '', fp(c.at || 0), f3(r.at)]);
+    rows += tr('b', ['Total cotisation', '', '', '', '', f3(r.cnss), '', '']);
+    rows += tr('sp', ['', '', '', '', '', '', '', '']);
+    rows += tr('', ['Salaire Brut Imposable', '', '', '', '', f3(r.impMens), '', '']);
+    rows += tr('sp', ['', '', '', '', '', '', '', '']);
+    rows += tr('', ['Déduction Situation familiale', '', '', '', '', f3(r.deduc / 12), '', '']);
+    rows += tr('sp', ['', '', '', '', '', '', '', '']);
+    rows += tr('', ['IRPP', '', '', '', '', f3(r.irpp), '', '']);
+    rows += tr('', ['Contribution Sociale Solidaire', '', '', '', '', f3(r.css), '', '']);
+    rows += tr('sp', ['', '', '', '', '', '', '', '']);
+    rows += tr('', ['Salaire net', '', '', '', '', f3(r.net), '', '']);
+    rows += tr('', ['Avance', '', '', '', '', f3(WP.num(state.avance)), '', '']);
+    rows += tr('', ['Remboursement crédit', '', '', '', '', f3(WP.num(state.credit)), '', '']);
+    rows += tr('', ['Pénalités', '', '', '', '', f3(WP.num(state.penal)), '', '']);
+    rows += tr('b', ['Net à payer', '', '', '', '', f3(r.netAPayer), '', '']);
+    rows += '<tr class="fill"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
+    var B = function (k) { return esc(bul[k]); };
+    var html =
+      '<div class="p-title">BULLETIN DE PAIE</div>' +
+      '<div class="p-top"><div class="pbox p-soc"><div>' + B('societe') + '&nbsp;</div><div>' + B('adresseSoc') + '&nbsp;</div><div>Affiliation CNSS : ' + (B('affil') || '--') + '</div></div>' +
+      '<div class="pbox p-per"><div><span>Année :</span><span>' + B('annee') + '</span></div><div><span>Mois de paie :</span><span>' + B('mois') + '</span></div></div></div>' +
+      '<div class="p-emp"><div>' +
+        '<div class="l"><b>Matricule :</b><span class="v">' + B('matricule') + '</span></div>' +
+        '<div class="l"><b>N° CNSS :</b><span class="v">' + B('cnssNo') + '</span></div>' +
+        '<div class="l"><b>Situation</b><span class="v">' + sit + '</span></div>' +
+        '<div class="l"><b>Enfants à charge</b><span class="v">' + state.enfants + '</span></div></div>' +
+      '<div><div class="l"><b>Emploi :</b><span class="v">' + B('emploi') + '</span></div>' +
+        '<div class="cat"><b>Catégorie :</b><span>' + B('categorie') + '</span><b style="min-width:0;margin-left:14px">Echelon :</b><span>' + B('echelon') + '</span></div>' +
+        '<div class="l"><b>J.Prev :</b><span class="v">' + dj(D.prev) + ' j</span></div>' +
+        '<div class="l"><b>Salaire de base</b><span class="v">' + f3(r.base) + '</span></div>' +
+        '<div class="l"><b>Régime horaire</b><span class="v">' + B('regime') + '</span></div></div>' +
+      '<div class="col3"><div class="l"><b>Nom &amp;</b><b style="min-width:0">' + esc(state.name) + '</b></div>' +
+        '<div class="l"><b>Adresse :</b><span class="v">' + B('adresse') + '</span></div>' +
+        '<div class="l"><b>CIN :</b><span class="v">' + B('cin') + '</span></div>' +
+        '<div class="l"><b>Département</b><span class="v">' + B('dept') + '</span></div></div></div>' +
+      '<table class="p-tab"><colgroup><col style="width:30%"><col style="width:8%"><col style="width:12%"><col style="width:9%"><col style="width:13%"><col style="width:12%"><col style="width:8%"><col style="width:8%"></colgroup>' +
+      '<thead><tr><th class="nb" colspan="6"></th><th colspan="2">Part patronale</th></tr>' +
+      '<tr><th>Désignation</th><th>Nombre</th><th>Base</th><th>Taux</th><th>Gain</th><th>Retenue</th><th>Taux</th><th>Retenue</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+      '<div class="p-net"><div>Net à payer en dinars</div><div>' + f3(r.netAPayer) + '</div></div>' +
+      '<div class="p-foot"><div>' +
+        '<div class="p-pay"><div>Mode de paiement</div><div>Intitulé banque</div><div>N° de compte</div><div>' + B('paiement') + '</div><div>' + B('banque') + '</div><div>' + B('compte') + '</div></div>' +
+        '<div class="p-sign"><div><b>Signature et cachet employeur</b><div></div></div><div><b>Signature employé</b><div></div></div></div></div>' +
+      '<div><div class="p-cg"><div>Congés pris mois en cours (payé / maladie) :</div><div>' + f1(D.con) + '</div></div>' +
+        '<div class="p-cg"><div>Congés acquis mois en cours :</div><div>' + f1(WP.num(bul.acquis)) + '</div></div>' +
+        '<div class="p-cg"><div>Solde congé payé :</div><div>' + f1(WP.num(bul.solde)) + '</div></div>' +
+        '<div class="p-cg"><div>Nombre de jours d’absence :</div><div>' + f1(D.abs) + '</div></div></div></div>';
+    $('#paper').innerHTML = html;
+    window._last = r;
+    fitPaper();
+  }
+  function fitPaper() {
+    var p = $('#paper'), w = $('#pwrap'); if (!p || !w) return;
+    var s = Math.min(1, w.clientWidth / 720);
+    p.style.transform = 'scale(' + s + ')';
+    w.style.height = Math.ceil(p.offsetHeight * s) + 'px';
+  }
+  window.addEventListener('resize', fitPaper);
+  window.addEventListener('beforeprint', function () { var w = $('#pwrap'); if (w) w.style.height = 'auto'; });
+  window.addEventListener('afterprint', fitPaper);
+
+  /* ================= PARAMÈTRES ================= */
   var pc = function (x) { return Math.round(x * 100000) / 1000; };
   function renderPar() {
     var cs = params.contracts;
@@ -271,7 +450,7 @@ table.t input[type=text],table.t input[type=number]{padding:8px 8px;font-size:14
       '<div class="card"><button class="btn danger" data-act="reset" style="border-style:solid">Rétablir les paramètres par défaut</button></div>';
   }
 
-  // ---------- événements ----------
+  /* ================= ÉVÉNEMENTS ================= */
   function setPath(path, kind, el) {
     var parts = path.split('.'), o = params;
     for (var i = 0; i < parts.length - 1; i++) o = o[parts[i]];
@@ -282,19 +461,25 @@ table.t input[type=text],table.t input[type=number]{padding:8px 8px;font-size:14
     else v = WP.num(el.value);
     o[key] = v; save(KEY_P, params);
   }
-  function persist() { save(KEY_S, state); }
   function toast(t) {
     var d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d);
     setTimeout(function () { d.remove(); }, 1800);
+  }
+  function show(t) {
+    tab = t;
+    document.querySelectorAll('nav button').forEach(function (x) { x.classList.toggle('on', x.dataset.tab === t); });
+    if (t === 'sim') renderSim(); else if (t === 'bul') renderBul(); else renderPar();
+    window.scrollTo(0, 0);
   }
   var app = $('#app');
   app.addEventListener('input', function (e) {
     var t = e.target;
     if (t.dataset.p) { setPath(t.dataset.p, t.dataset.kind, t); return; }
+    if (t.dataset.b) { bul[t.dataset.b] = t.value; state.bul = bul; persist(); if (tab === 'bul') updatePaper(); return; }
     if (tab !== 'sim') return;
-    var pid = t.closest('.prime');
-    if (pid && t.dataset.f === 'value') {
-      var p = state.primes.filter(function (x) { return String(x.id) === pid.dataset.pid; })[0];
+    var pe = t.closest('.prime');
+    if (pe && t.dataset.f === 'value') {
+      var p = state.primes.filter(function (x) { return String(x.id) === pe.dataset.pid; })[0];
       if (p) { p.value = t.value; persist(); updateResults(); }
     } else if (t.dataset.k && t.tagName === 'INPUT') {
       state[t.dataset.k] = t.value; persist(); updateResults();
@@ -303,6 +488,7 @@ table.t input[type=text],table.t input[type=number]{padding:8px 8px;font-size:14
   app.addEventListener('change', function (e) {
     var t = e.target;
     if (t.dataset.p) { setPath(t.dataset.p, t.dataset.kind, t); return; }
+    if (t.dataset.b) { bul[t.dataset.b] = t.value; state.bul = bul; persist(); if (tab === 'bul') updatePaper(); return; }
     if (tab !== 'sim') return;
     var pe = t.closest('.prime');
     if (pe && t.dataset.f) {
@@ -312,8 +498,7 @@ table.t input[type=text],table.t input[type=number]{padding:8px 8px;font-size:14
       if (t.dataset.f === 'name' || t.dataset.f === 'mode') { $('#primes').innerHTML = state.primes.map(primeHtml).join(''); }
       updateResults();
     } else if (t.dataset.k) {
-      var v = t.dataset.k === 'enfants' ? parseInt(t.value, 10) : t.value;
-      state[t.dataset.k] = v; persist(); updateResults();
+      state[t.dataset.k] = t.dataset.k === 'enfants' ? parseInt(t.value, 10) : t.value; persist(); updateResults();
     }
   });
   app.addEventListener('click', function (e) {
@@ -326,6 +511,8 @@ table.t input[type=text],table.t input[type=number]{padding:8px 8px;font-size:14
       var id = b.closest('.prime').dataset.pid; state.primes = state.primes.filter(function (x) { return String(x.id) !== id; });
       persist(); $('#primes').innerHTML = state.primes.map(primeHtml).join(''); updateResults();
     }
+    else if (act === 'gobul') { show('bul'); }
+    else if (act === 'print') { window.print(); }
     else if (act === 'share') {
       var txt = shareText();
       if (navigator.share) navigator.share({ title: 'Simulation de paie', text: txt }).catch(function () {});
@@ -339,16 +526,9 @@ table.t input[type=text],table.t input[type=number]{padding:8px 8px;font-size:14
       if (confirm('Rétablir les paramètres par défaut ?')) { params = clone(WP.DEFAULT_PARAMS); save(KEY_P, params); if (!params.contracts[state.contract]) state.contract = 'CDI'; renderPar(); toast('Paramètres rétablis'); }
     }
   });
-  document.querySelectorAll('nav button').forEach(function (b) {
-    b.addEventListener('click', function () {
-      tab = b.dataset.tab;
-      document.querySelectorAll('nav button').forEach(function (x) { x.classList.toggle('on', x === b); });
-      if (tab === 'sim') renderSim(); else renderPar();
-      window.scrollTo(0, 0);
-    });
-  });
+  document.querySelectorAll('nav button').forEach(function (b) { b.addEventListener('click', function () { show(b.dataset.tab); }); });
 
-  // ---------- installation PWA ----------
+  /* ================= INSTALLATION PWA ================= */
   var deferred = null;
   window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; bindInstall(); });
   function bindInstall() {

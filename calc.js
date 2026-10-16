@@ -40,6 +40,17 @@
     return isFinite(n) ? n : 0;
   };
 
+  // jours du mois : prev = jours prévus (J.Prev), trav = travaillés ('' ou absent = auto),
+  // feries = jours fériés payés, conges = congés payés / maladie ; absences non payées = reste
+  function normDays(d) {
+    const prev = Math.max(1, num(d && d.prev) || 26);
+    const fer = Math.max(0, num(d && d.feries)), con = Math.max(0, num(d && d.conges));
+    const auto = !d || d.trav === '' || d.trav == null;
+    const trav = auto ? Math.max(0, prev - fer - con) : Math.max(0, num(d.trav));
+    const abs = Math.max(0, prev - trav - fer - con);
+    return { prev, trav, fer, con, abs, auto, over: trav + fer + con > prev + 1e-9 };
+  }
+
   function irppAnnual(rni, bareme) {
     let tax = 0, prev = 0;
     for (const b of bareme) {
@@ -49,19 +60,26 @@
     return tax;
   }
 
-  // ctx : { params, contract, chef, enfants, primes:[{cot,imp,mode:'fixed'|'pct',value}], avance, credit, penal }
+  // ctx : { params, contract, chef, enfants, days, primes:[{cot,imp,mode:'fixed'|'pct',value}], avance, credit, penal }
+  // base = salaire de base MENSUEL du contrat (mois complet). Les gains sont proratisés selon les jours.
   function compute(base, ctx) {
     const p = ctx.params, f = p.fiscal;
     const c = p.contracts[ctx.contract] || p.contracts.CDI;
-    const primes = ctx.primes.map((x) => ({
-      ...x,
-      amount: r3(x.mode === 'pct' ? base * num(x.value) : num(x.value))
-    }));
+    const D = normDays(ctx.days);
+    const gBase = r3(base * D.trav / D.prev);
+    const gFer = r3(base * D.fer / D.prev);
+    const gCon = r3(base * D.con / D.prev);
+    const gAbs = D.abs > 0 ? -r3(base * D.abs / D.prev) : 0;       // information (déjà exclue du gain de base)
+    const basePaid = r3(gBase + gFer + gCon);
+    const primes = ctx.primes.map((x) => {
+      const full = r3(x.mode === 'pct' ? base * num(x.value) : num(x.value));
+      return { ...x, full, amount: r3(full * D.trav / D.prev) };
+    });
     const sum = (fn) => primes.reduce((s, x) => s + (fn(x) ? x.amount : 0), 0);
     const totalPrimes = sum(() => true);
-    const brut = base + totalPrimes;
-    const brutCot = base + sum((x) => x.cot);
-    const brutImp = base + sum((x) => x.imp);
+    const brut = basePaid + totalPrimes;
+    const brutCot = basePaid + sum((x) => x.cot);
+    const brutImp = basePaid + sum((x) => x.imp);
     const cnss = r3(brutCot * c.cnssS);
     const impMens = brutImp - cnss;
     const annuel = impMens * 12;
@@ -77,33 +95,39 @@
     const netAPayer = r3(net - autres);
     const patr = r3(brutCot * c.cnssP), at = r3(brutCot * c.at), tfp = r3(brutCot * c.tfp), fop = r3(brutCot * c.foprolos);
     return {
-      base, primes, totalPrimes: r3(totalPrimes), brut: r3(brut), brutCot: r3(brutCot), brutImp: r3(brutImp),
+      base, days: D, daily: base / D.prev, gBase, gFer, gCon, gAbs, basePaid,
+      primes, totalPrimes: r3(totalPrimes), brut: r3(brut), brutCot: r3(brutCot), brutImp: r3(brutImp),
       cnss, impMens: r3(impMens), annuel, abatt, deduc, rni, irpp, css, retenues: r3(retenues),
       net, autres: r3(autres), netAPayer, patr, at, tfp, fop, cout: r3(brut + patr + at + tfp + fop)
     };
   }
 
-  // trouve le salaire de base selon le mode du contrat
-  function solve(mode, amount, ctx) {
+  // salaire de base mensuel (mois complet) selon le mode du contrat
+  function solveBase(mode, amount, ctx) {
     amount = num(amount);
     const sumP = (pred, kind) => ctx.primes.reduce((s, x) => s + (pred(x) && x.mode === kind ? num(x.value) : 0), 0);
-    if (mode === MODES.BASE) return compute(r3(amount), ctx);
-    if (mode === MODES.GROSS) {
-      return compute(r3((amount - sumP(() => true, 'fixed')) / (1 + sumP(() => true, 'pct'))), ctx);
-    }
-    if (mode === MODES.COT) {
-      return compute(r3((amount - sumP((x) => x.cot, 'fixed')) / (1 + sumP((x) => x.cot, 'pct'))), ctx);
-    }
-    // NET : recherche dichotomique au millime sur le net avant avance
+    if (mode === MODES.BASE) return r3(amount);
+    if (mode === MODES.GROSS) return r3((amount - sumP(() => true, 'fixed')) / (1 + sumP(() => true, 'pct')));
+    if (mode === MODES.COT) return r3((amount - sumP((x) => x.cot, 'fixed')) / (1 + sumP((x) => x.cot, 'pct')));
+    // NET : recherche dichotomique au millime sur le net (mois complet, avant avance)
     const target = r3(amount);
     let lo = 0, hi = Math.ceil(Math.max(amount, 1) * 5000);
     while (hi - lo > 1) {
       const mid = Math.floor((lo + hi) / 2);
       if (compute(mid / 1000, ctx).net >= target) hi = mid; else lo = mid;
     }
-    return compute(hi / 1000, ctx);
+    return hi / 1000;
   }
 
-  const api = { DEFAULT_PARAMS, MODES, compute, solve, r3, num };
+  // retourne le calcul du mois (avec les jours) ; .full = même calcul sur un mois complet
+  function solve(mode, amount, ctx) {
+    const fullCtx = Object.assign({}, ctx, { days: null });
+    const base = solveBase(mode, amount, fullCtx);
+    const r = compute(base, ctx);
+    r.full = compute(base, fullCtx);
+    return r;
+  }
+
+  const api = { DEFAULT_PARAMS, MODES, compute, solve, solveBase, normDays, r3, num };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.WP = api;
 })(typeof self !== 'undefined' ? self : this);
