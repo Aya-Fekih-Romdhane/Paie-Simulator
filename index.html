@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1F3864">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Paie TN">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Simulateur de paie</title>
+<style>
+:root{
+  --bg:#f4f6fb; --card:#ffffff; --ink:#1b2333; --muted:#66708a; --line:#e2e7f1;
+  --navy:#1F3864; --accent:#2f6df6; --accent-soft:#e8efff; --good:#16794c; --good-soft:#e5f6ee; --warn:#a15c00; --warn-soft:#fff3dc; --bad:#b3261e;
+  --shadow:0 1px 2px rgba(20,30,60,.06),0 4px 14px rgba(20,30,60,.06);
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#10151f;--card:#1a2130;--ink:#e8ecf5;--muted:#9aa5bf;--line:#2a3347;--navy:#0f1b33;--accent:#6c9bff;--accent-soft:#223152;--good:#5fd39b;--good-soft:#16352a;--warn:#ffc266;--warn-soft:#3a2d12;--bad:#ff8a80;--shadow:none}
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+header{background:var(--navy);color:#fff;padding:calc(env(safe-area-inset-top) + 12px) 16px 12px;position:sticky;top:0;z-index:5}
+header h1{margin:0;font-size:17px;font-weight:700;letter-spacing:.2px}
+header p{margin:2px 0 0;font-size:12px;opacity:.75}
+main{padding:12px 12px calc(84px + env(safe-area-inset-bottom));max-width:640px;margin:0 auto}
+.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.card h2{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700}
+label{display:block;font-size:12px;color:var(--muted);margin:0 0 4px;font-weight:600}
+input[type=text],input[type=number],select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font-size:16px;font-family:inherit;min-height:44px}
+input:focus,select:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+.row{display:grid;gap:10px;margin-bottom:10px}
+.row.c2{grid-template-columns:1fr 1fr}
+.row.c3{grid-template-columns:1fr 1fr 1fr}
+.row:last-child{margin-bottom:0}
+.seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:transparent;color:var(--muted);padding:9px 4px;border-radius:8px;font-size:13px;font-weight:600;font-family:inherit;min-height:40px}
+.seg button.on{background:var(--accent);color:#fff}
+.hint{font-size:12px;color:var(--muted);margin:6px 0 0}
+.prime{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:10px;background:var(--bg)}
+.prime .top{display:flex;gap:8px;align-items:flex-end}
+.prime .top>div{flex:1}
+.del{border:0;background:transparent;color:var(--bad);font-size:22px;line-height:1;padding:8px 10px;min-height:44px;border-radius:10px}
+.tags{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.tag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px;background:var(--line);color:var(--muted)}
+.tag.yes{background:var(--accent-soft);color:var(--accent)}
+.btn{width:100%;border:1px dashed var(--accent);color:var(--accent);background:transparent;padding:12px;border-radius:12px;font-size:15px;font-weight:700;font-family:inherit;min-height:46px}
+.btn.solid{border:0;background:var(--accent);color:#fff}
+.btn.ghost{border:1px solid var(--line);color:var(--ink)}
+.btn.danger{border:1px solid var(--bad);color:var(--bad)}
+.hero{background:linear-gradient(135deg,var(--navy),#2c4f8f);color:#fff;border:0}
+.hero .lab{font-size:12px;opacity:.8;text-transform:uppercase;letter-spacing:.6px}
+.hero .big{font-size:34px;font-weight:800;margin:4px 0 2px;font-variant-numeric:tabular-nums}
+.hero .sub{font-size:13px;opacity:.85}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.kv:last-child{border-bottom:0}
+.kv span:first-child{color:var(--muted)}
+.kv b{font-weight:700}
+.kv.tot{font-weight:800}
+.kv.tot span:first-child{color:var(--ink)}
+.neg{color:var(--bad)}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px}
+.pill.ok{background:var(--good-soft);color:var(--good)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+details summary{cursor:pointer;font-weight:700;color:var(--accent);padding:6px 0;min-height:36px}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:6}
+nav button{flex:1;border:0;background:transparent;color:var(--muted);padding:10px 4px 9px;font-size:12px;font-weight:700;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:56px}
+nav button svg{width:22px;height:22px}
+nav button.on{color:var(--accent)}
+table.t{width:100%;border-collapse:collapse;font-size:13px}
+table.t th{font-size:11px;color:var(--muted);text-align:left;padding:4px 4px 6px;font-weight:700}
+table.t td{padding:3px 3px}
+table.t input[type=text],table.t input[type=number]{padding:8px 8px;font-size:14px;min-height:38px}
+.chk{display:flex;align-items:center;gap:8px;font-size:14px;min-height:40px}
+.chk input{width:22px;height:22px;accent-color:var(--accent)}
+.toast{position:fixed;left:50%;bottom:calc(76px + env(safe-area-inset-bottom));transform:translateX(-50%);background:#222c;color:#fff;padding:10px 16px;border-radius:99px;font-size:13px;z-index:9;backdrop-filter:blur(6px)}
+.install{display:none;background:var(--accent-soft);color:var(--accent);font-weight:700;text-align:center;padding:10px;border-radius:12px;margin-bottom:12px;border:0;width:100%;font-family:inherit;font-size:14px;min-height:44px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Simulateur de paie</h1>
+  <p>Tunisie · CNSS, IRPP, CSS · hors ligne</p>
+</header>
+<main id="app"></main>
+<nav>
+  <button id="tab-sim" class="on" data-tab="sim">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 12h2M12 12h2M16 12h0M8 16h2M12 16h2M16 16h0"/></svg>Simulateur
+  </button>
+  <button id="tab-par" data-tab="par">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Paramètres
+  </button>
+</nav>
+<script src="calc.js"></script>
+<script>
+(function () {
+  'use strict';
+  var KEY_P = 'wp_params_v1', KEY_S = 'wp_state_v1';
+  var MODE_LABELS = { net: 'Salaire net', gross: 'Salaire brut', cot: 'Salaire brut cotisable', base: 'Salaire de base' };
+  var SHORT = { net: 'Net', gross: 'Brut', cot: 'Brut cotis.', base: 'Base' };
+  var MODE_HINTS = {
+    net: 'Le contrat indique le net (avant avance, primes comprises). Le salaire de base est déduit.',
+    gross: 'Le contrat indique le brut total (base + primes). Le salaire de base est déduit.',
+    cot: 'Le contrat indique base + primes cotisables. Le salaire de base est déduit.',
+    base: 'Vous saisissez directement le salaire de base.'
+  };
+  var clone = function (o) { return JSON.parse(JSON.stringify(o)); };
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]; }); };
+
+  function load(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
+  function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+
+  var params = load(KEY_P);
+  if (!params || !params.contracts || !params.fiscal || !params.bareme || !params.catalog) params = clone(WP.DEFAULT_PARAMS);
+  var uid = 0;
+  var state = load(KEY_S) || {};
+  state = Object.assign({ name: '', contract: 'CDI', mode: 'net', amount: '1800', chef: false, enfants: 0, avance: '', credit: '', penal: '', primes: [] }, state);
+  if (!params.contracts[state.contract]) state.contract = Object.keys(params.contracts)[0];
+  state.primes.forEach(function (p) { p.id = ++uid; });
+  var tab = 'sim';
+
+  // ---------- formatage ----------
+  var nf = new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+  var fm = function (x) { return nf.format(x); };
+  var pct = function (x) { return String(Math.round(x * 100000) / 1000).replace('.', ',') + ' %'; };
+
+  // ---------- calcul ----------
+  function catInfo(name) {
+    var n = String(name || '').trim().toLowerCase();
+    for (var i = 0; i < params.catalog.length; i++) if (params.catalog[i].name.trim().toLowerCase() === n) return params.catalog[i];
+    return null;
+  }
+  function buildCtx() {
+    return {
+      params: params, contract: state.contract, chef: state.chef, enfants: state.enfants,
+      avance: state.avance, credit: state.credit, penal: state.penal,
+      primes: state.primes.filter(function (p) { return p.name; }).map(function (p) {
+        var c = catInfo(p.name);
+        return { name: p.name, cot: !!(c && c.cot), imp: !!(c && c.imp), mode: p.mode, value: p.mode === 'pct' ? WP.num(p.value) / 100 : WP.num(p.value) };
+      })
+    };
+  }
+  function calc() {
+    var ctx = buildCtx();
+    return { ctx: ctx, r: WP.solve(state.mode, state.amount, ctx) };
+  }
+
+  // ---------- rendu simulateur ----------
+  function optionsHtml(list, sel) {
+    return list.map(function (v) { return '<option value="' + esc(v) + '"' + (v === sel ? ' selected' : '') + '>' + esc(v) + '</option>'; }).join('');
+  }
+  function primeHtml(p) {
+    var c = catInfo(p.name);
+    var names = params.catalog.map(function (x) { return x.name; });
+    if (p.name && !c) names.unshift(p.name);
+    return '<div class="prime" data-pid="' + p.id + '">' +
+      '<div class="top"><div><label>Prime</label><select data-f="name"><option value="">— choisir —</option>' + optionsHtml(names, p.name) + '</select></div>' +
+      '<button class="del" data-act="delprime" aria-label="Supprimer">×</button></div>' +
+      '<div class="row c2" style="margin-top:10px"><div><label>Type</label><select data-f="mode">' +
+      '<option value="fixed"' + (p.mode === 'fixed' ? ' selected' : '') + '>Montant (DT)</option>' +
+      '<option value="pct"' + (p.mode === 'pct' ? ' selected' : '') + '>% du base</option></select></div>' +
+      '<div><label>' + (p.mode === 'pct' ? 'Pourcentage (%)' : 'Montant (DT)') + '</label><input type="text" inputmode="decimal" data-f="value" value="' + esc(p.value) + '" placeholder="0"></div></div>' +
+      '<div class="tags"><span class="tag ' + (c && c.cot ? 'yes' : '') + '">Cotisable : ' + (c && c.cot ? 'oui' : 'non') + '</span>' +
+      '<span class="tag ' + (c && c.imp ? 'yes' : '') + '">Imposable : ' + (c && c.imp ? 'oui' : 'non') + '</span></div></div>';
+  }
+  function renderSim() {
+    var contracts = Object.keys(params.contracts);
+    var modeBtns = ['net', 'gross', 'cot', 'base'].map(function (m) {
+      return '<button data-act="mode" data-v="' + m + '" class="' + (state.mode === m ? 'on' : '') + '">' + SHORT[m] + '</button>';
+    }).join('');
+    $('#app').innerHTML =
+      '<button class="install" id="installBtn">Installer l’application sur le téléphone</button>' +
+      '<div class="card"><h2>Contrat</h2>' +
+      '<div class="row"><div><label>Nom du salarié (facultatif)</label><input type="text" data-k="name" value="' + esc(state.name) + '" placeholder="Nom et prénom"></div></div>' +
+      '<div class="row"><div><label>Type de contrat</label><select data-k="contract">' + optionsHtml(contracts, state.contract) + '</select></div></div>' +
+      '<label>Le contrat indique</label><div class="seg" role="group">' + modeBtns + '</div>' +
+      '<p class="hint" id="modeHint">' + MODE_HINTS[state.mode] + '</p>' +
+      '<div class="row" style="margin-top:12px"><div><label id="amountLab">' + MODE_LABELS[state.mode] + ' (DT / mois)</label><input type="text" inputmode="decimal" data-k="amount" value="' + esc(state.amount) + '"></div></div></div>' +
+      '<div class="card"><h2>Situation familiale</h2><div class="row c2">' +
+      '<div><label>Chef de famille</label><div class="seg"><button data-act="chef" data-v="0" class="' + (!state.chef ? 'on' : '') + '">Non</button><button data-act="chef" data-v="1" class="' + (state.chef ? 'on' : '') + '">Oui</button></div></div>' +
+      '<div><label>Enfants à charge</label><select data-k="enfants">' + [0, 1, 2, 3, 4, 5, 6].map(function (n) { return '<option value="' + n + '"' + (state.enfants === n ? ' selected' : '') + '>' + n + '</option>'; }).join('') + '</select></div></div></div>' +
+      '<div class="card"><h2>Primes</h2><div id="primes">' + state.primes.map(primeHtml).join('') + '</div>' +
+      '<button class="btn" data-act="addprime">+ Ajouter une prime</button></div>' +
+      '<div class="card"><h2>Retenues sur le net</h2><div class="row c3">' +
+      '<div><label>Avance</label><input type="text" inputmode="decimal" data-k="avance" value="' + esc(state.avance) + '" placeholder="0"></div>' +
+      '<div><label>Crédit</label><input type="text" inputmode="decimal" data-k="credit" value="' + esc(state.credit) + '" placeholder="0"></div>' +
+      '<div><label>Pénalités</label><input type="text" inputmode="decimal" data-k="penal" value="' + esc(state.penal) + '" placeholder="0"></div></div></div>' +
+      '<div id="results"></div>';
+    updateResults();
+    bindInstall();
+  }
+  function kv(l, v, cls) { return '<div class="kv ' + (cls || '') + '"><span>' + l + '</span><b>' + v + '</b></div>'; }
+  function updateResults() {
+    var out = calc(), r = out.r, c = params.contracts[state.contract] || {};
+    var ecart = state.mode === 'net' ? WP.r3(r.net - WP.r3(WP.num(state.amount))) : null;
+    var html = '<div class="card hero"><div class="lab">Net à payer</div><div class="big">' + fm(r.netAPayer) + ' DT</div>' +
+      '<div class="sub">Salaire de base : <b>' + fm(r.base) + ' DT</b> · Brut : <b>' + fm(r.brut) + ' DT</b></div>' +
+      (ecart !== null ? '<div style="margin-top:10px"><span class="pill ' + (Math.abs(ecart) <= 0.0011 ? 'ok' : 'warn') + '">' +
+        (Math.abs(ecart) <= 0.0011 ? 'Net du contrat atteint' : 'Écart avec le net du contrat : ' + fm(ecart) + ' DT') + '</span></div>' : '') +
+      '</div>';
+    html += '<div class="card"><h2>Bulletin</h2>' +
+      kv('Salaire de base', fm(r.base)) +
+      r.primes.map(function (p) { return kv(esc(p.name) + (p.mode === 'pct' ? ' (' + pct(p.value) + ')' : ''), fm(p.amount)); }).join('') +
+      kv('Total brut', fm(r.brut), 'tot') +
+      kv('CNSS salariale (' + pct(c.cnssS || 0) + ')', '− ' + fm(r.cnss)) +
+      kv('IRPP', '− ' + fm(r.irpp)) +
+      kv('CSS', '− ' + fm(r.css)) +
+      kv('Salaire net', fm(r.net), 'tot') +
+      (r.autres ? kv('Avance, crédit, pénalités', '− ' + fm(r.autres)) : '') +
+      kv('Net à payer', fm(r.netAPayer), 'tot') + '</div>';
+    html += '<div class="card"><details><summary>Détail fiscal et coût employeur</summary>' +
+      kv('Brut cotisable', fm(r.brutCot)) + kv('Salaire imposable mensuel (après CNSS)', fm(r.impMens)) +
+      kv('Revenu annuel imposable', fm(r.annuel)) + kv('Abattement (10 %, plafonné)', '− ' + fm(r.abatt)) +
+      kv('Déductions familiales', '− ' + fm(r.deduc)) + kv('Revenu net imposable', fm(r.rni)) +
+      kv('CNSS patronale (' + pct(c.cnssP || 0) + ')', fm(r.patr)) + kv('Accident du travail (' + pct(c.at || 0) + ')', fm(r.at)) +
+      kv('TFP (' + pct(c.tfp || 0) + ')', fm(r.tfp)) + kv('FOPROLOS (' + pct(c.foprolos || 0) + ')', fm(r.fop)) +
+      kv('Coût total employeur', fm(r.cout), 'tot') + '</details></div>' +
+      '<button class="btn solid" data-act="share">Partager le résultat</button>';
+    $('#results').innerHTML = html;
+    $('#modeHint').textContent = MODE_HINTS[state.mode];
+    $('#amountLab').textContent = MODE_LABELS[state.mode] + ' (DT / mois)';
+    window._last = r;
+  }
+  function shareText() {
+    var r = window._last, c = state.contract;
+    return (state.name ? state.name + ' — ' : '') + 'Contrat ' + c + '\n' +
+      'Salaire de base : ' + fm(r.base) + ' DT\nBrut : ' + fm(r.brut) + ' DT\nCNSS : ' + fm(r.cnss) + ' · IRPP : ' + fm(r.irpp) + ' · CSS : ' + fm(r.css) +
+      '\nNet : ' + fm(r.net) + ' DT\nNet à payer : ' + fm(r.netAPayer) + ' DT';
+  }
+
+  // ---------- rendu paramètres ----------
+  var pc = function (x) { return Math.round(x * 100000) / 1000; };
+  function renderPar() {
+    var cs = params.contracts;
+    var rows = Object.keys(cs).map(function (n) {
+      var c = cs[n];
+      var fld = function (k) { return '<td><input type="text" inputmode="decimal" data-p="contracts.' + n + '.' + k + '" data-kind="pct" value="' + pc(c[k]) + '"></td>'; };
+      return '<tr><td><b>' + esc(n) + '</b></td>' + fld('cnssS') + fld('cnssP') + fld('at') + fld('tfp') + fld('foprolos') +
+        '<td><input type="checkbox" data-p="contracts.' + n + '.irpp" data-kind="bool"' + (c.irpp ? ' checked' : '') + ' style="width:22px;height:22px"></td>' +
+        '<td><input type="checkbox" data-p="contracts.' + n + '.css" data-kind="bool"' + (c.css ? ' checked' : '') + ' style="width:22px;height:22px"></td></tr>';
+    }).join('');
+    var f = params.fiscal;
+    var fisc = [['abattRate', 'Abattement frais pro. (%)', 'pct'], ['abattCap', 'Plafond abattement (DT/an)', 'num'], ['chef', 'Déduction chef de famille (DT/an)', 'num'],
+      ['enfant', 'Déduction par enfant (DT/an)', 'num'], ['maxEnfants', 'Enfants déductibles (max)', 'num'], ['cssRate', 'Taux CSS (%)', 'pct'], ['cssSeuil', 'Seuil CSS (DT/an)', 'num']]
+      .map(function (x) {
+        return '<div class="row" style="margin-bottom:8px"><div><label>' + x[1] + '</label><input type="text" inputmode="decimal" data-p="fiscal.' + x[0] + '" data-kind="' + x[2] + '" value="' + (x[2] === 'pct' ? pc(f[x[0]]) : f[x[0]]) + '"></div></div>';
+      }).join('');
+    var bar = params.bareme.map(function (b, i) {
+      return '<tr><td><input type="text" inputmode="decimal" data-p="bareme.' + i + '.from" data-kind="num" value="' + b.from + '"></td>' +
+        '<td><input type="text" inputmode="decimal" data-p="bareme.' + i + '.rate" data-kind="pct" value="' + pc(b.rate) + '"></td>' +
+        '<td><button class="del" data-act="delbar" data-i="' + i + '">×</button></td></tr>';
+    }).join('');
+    var cat = params.catalog.map(function (p, i) {
+      return '<tr><td><input type="text" data-p="catalog.' + i + '.name" data-kind="text" value="' + esc(p.name) + '"></td>' +
+        '<td><input type="checkbox" data-p="catalog.' + i + '.cot" data-kind="bool"' + (p.cot ? ' checked' : '') + ' style="width:22px;height:22px"></td>' +
+        '<td><input type="checkbox" data-p="catalog.' + i + '.imp" data-kind="bool"' + (p.imp ? ' checked' : '') + ' style="width:22px;height:22px"></td>' +
+        '<td><button class="del" data-act="delcat" data-i="' + i + '">×</button></td></tr>';
+    }).join('');
+    $('#app').innerHTML =
+      '<div class="card"><h2>Contrats (taux en %)</h2><div style="overflow-x:auto"><table class="t" style="min-width:520px"><tr><th>Contrat</th><th>CNSS sal.</th><th>CNSS pat.</th><th>AT</th><th>TFP</th><th>FOPR.</th><th>IRPP</th><th>CSS</th></tr>' + rows + '</table></div>' +
+      '<p class="hint">Hypothèses à valider : KARAMA (part patronale prise en charge par l’État) et SIVP (aucune retenue). AT, TFP et FOPROLOS dépendent du secteur.</p></div>' +
+      '<div class="card"><h2>Paramètres fiscaux</h2>' + fisc + '</div>' +
+      '<div class="card"><h2>Barème IRPP annuel</h2><table class="t"><tr><th>À partir de (DT)</th><th>Taux (%)</th><th></th></tr>' + bar + '</table>' +
+      '<button class="btn" data-act="addbar" style="margin-top:8px">+ Ajouter une tranche</button>' +
+      '<p class="hint">Barème de la loi de finances 2025. À vérifier si une loi de finances 2026 l’a modifié.</p></div>' +
+      '<div class="card"><h2>Catalogue de primes</h2><table class="t"><tr><th>Prime</th><th>Cotis.</th><th>Impos.</th><th></th></tr>' + cat + '</table>' +
+      '<button class="btn" data-act="addcat" style="margin-top:8px">+ Ajouter une prime au catalogue</button></div>' +
+      '<div class="card"><button class="btn danger" data-act="reset" style="border-style:solid">Rétablir les paramètres par défaut</button></div>';
+  }
+
+  // ---------- événements ----------
+  function setPath(path, kind, el) {
+    var parts = path.split('.'), o = params;
+    for (var i = 0; i < parts.length - 1; i++) o = o[parts[i]];
+    var key = parts[parts.length - 1], v;
+    if (kind === 'bool') v = el.checked;
+    else if (kind === 'text') v = el.value;
+    else if (kind === 'pct') v = WP.num(el.value) / 100;
+    else v = WP.num(el.value);
+    o[key] = v; save(KEY_P, params);
+  }
+  function persist() { save(KEY_S, state); }
+  function toast(t) {
+    var d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d);
+    setTimeout(function () { d.remove(); }, 1800);
+  }
+  var app = $('#app');
+  app.addEventListener('input', function (e) {
+    var t = e.target;
+    if (t.dataset.p) { setPath(t.dataset.p, t.dataset.kind, t); return; }
+    if (tab !== 'sim') return;
+    var pid = t.closest('.prime');
+    if (pid && t.dataset.f === 'value') {
+      var p = state.primes.filter(function (x) { return String(x.id) === pid.dataset.pid; })[0];
+      if (p) { p.value = t.value; persist(); updateResults(); }
+    } else if (t.dataset.k && t.tagName === 'INPUT') {
+      state[t.dataset.k] = t.value; persist(); updateResults();
+    }
+  });
+  app.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t.dataset.p) { setPath(t.dataset.p, t.dataset.kind, t); return; }
+    if (tab !== 'sim') return;
+    var pe = t.closest('.prime');
+    if (pe && t.dataset.f) {
+      var p = state.primes.filter(function (x) { return String(x.id) === pe.dataset.pid; })[0];
+      if (!p) return;
+      p[t.dataset.f] = t.value; persist();
+      if (t.dataset.f === 'name' || t.dataset.f === 'mode') { $('#primes').innerHTML = state.primes.map(primeHtml).join(''); }
+      updateResults();
+    } else if (t.dataset.k) {
+      var v = t.dataset.k === 'enfants' ? parseInt(t.value, 10) : t.value;
+      state[t.dataset.k] = v; persist(); updateResults();
+    }
+  });
+  app.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-act]'); if (!b) return;
+    var act = b.dataset.act;
+    if (act === 'mode') { state.mode = b.dataset.v; persist(); renderSim(); }
+    else if (act === 'chef') { state.chef = b.dataset.v === '1'; persist(); renderSim(); }
+    else if (act === 'addprime') { state.primes.push({ id: ++uid, name: '', mode: 'fixed', value: '' }); persist(); $('#primes').innerHTML = state.primes.map(primeHtml).join(''); }
+    else if (act === 'delprime') {
+      var id = b.closest('.prime').dataset.pid; state.primes = state.primes.filter(function (x) { return String(x.id) !== id; });
+      persist(); $('#primes').innerHTML = state.primes.map(primeHtml).join(''); updateResults();
+    }
+    else if (act === 'share') {
+      var txt = shareText();
+      if (navigator.share) navigator.share({ title: 'Simulation de paie', text: txt }).catch(function () {});
+      else if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () { toast('Résultat copié'); });
+    }
+    else if (act === 'addbar') { params.bareme.push({ from: 0, rate: 0 }); save(KEY_P, params); renderPar(); }
+    else if (act === 'delbar') { params.bareme.splice(+b.dataset.i, 1); save(KEY_P, params); renderPar(); }
+    else if (act === 'addcat') { params.catalog.push({ name: 'Nouvelle prime', cot: false, imp: false }); save(KEY_P, params); renderPar(); }
+    else if (act === 'delcat') { params.catalog.splice(+b.dataset.i, 1); save(KEY_P, params); renderPar(); }
+    else if (act === 'reset') {
+      if (confirm('Rétablir les paramètres par défaut ?')) { params = clone(WP.DEFAULT_PARAMS); save(KEY_P, params); if (!params.contracts[state.contract]) state.contract = 'CDI'; renderPar(); toast('Paramètres rétablis'); }
+    }
+  });
+  document.querySelectorAll('nav button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      tab = b.dataset.tab;
+      document.querySelectorAll('nav button').forEach(function (x) { x.classList.toggle('on', x === b); });
+      if (tab === 'sim') renderSim(); else renderPar();
+      window.scrollTo(0, 0);
+    });
+  });
+
+  // ---------- installation PWA ----------
+  var deferred = null;
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; bindInstall(); });
+  function bindInstall() {
+    var btn = $('#installBtn'); if (!btn || !deferred) return;
+    btn.style.display = 'block';
+    btn.onclick = function () { deferred.prompt(); deferred.userChoice.then(function () { deferred = null; btn.style.display = 'none'; }); };
+  }
+  if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+
+  renderSim();
+})();
+</script>
+</body>
+</html>
