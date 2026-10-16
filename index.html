@@ -182,6 +182,7 @@ table.p-tab tr.fill td{height:100%;padding:0;border-bottom:1px solid #000}
   var state = load(KEY_S) || {};
   var bul = Object.assign({}, BUL_DEF, state.bul || {});
   state = Object.assign({ name: '', contract: 'CDI', mode: 'net', amount: '1800', chef: false, enfants: 0, prev: '26', trav: '', feries: '', conges: '',
+    regime: 'mensuel', quotite: 1, hprev: '', htrav: '', hferies: '', hconges: '',
     avance: '', credit: '', penal: '', primes: [] }, state);
   state.bul = bul;
   if (!params.contracts[state.contract]) state.contract = Object.keys(params.contracts)[0];
@@ -199,10 +200,19 @@ table.p-tab tr.fill td{height:100%;padding:0;border-bottom:1px solid #000}
     for (var i = 0; i < params.catalog.length; i++) if (params.catalog[i].name.trim().toLowerCase() === n) return params.catalog[i];
     return null;
   }
+  var isH = function () { return state.regime === 'horaire'; };
+  var qte = function () { return WP.normQuotite(state.quotite); };
+  var hDef = function () { return WP.r3(WP.HOURS_FULL * qte()); };          // 208 h, 104 h en mi-temps
+  var uLab = function (n) { return dj(n) + (isH() ? ' h' : ' j'); };
+  function regimeLabel() {
+    return (qte() === 1 ? 'TEMPS PLEIN' : 'MI-TEMPS') + (isH() ? ' · HORAIRE' : '');
+  }
   function buildCtx() {
     return {
       params: params, contract: state.contract, chef: state.chef, enfants: state.enfants,
       avance: state.avance, credit: state.credit, penal: state.penal,
+      regime: state.regime, quotite: qte(),
+      hours: { prev: state.hprev === '' ? hDef() : state.hprev, trav: state.htrav, feries: state.hferies, conges: state.hconges },
       days: { prev: state.prev, trav: state.trav, feries: state.feries, conges: state.conges },
       primes: state.primes.filter(function (p) { return p.name; }).map(function (p) {
         var c = catInfo(p.name);
@@ -216,6 +226,9 @@ table.p-tab tr.fill td{height:100%;padding:0;border-bottom:1px solid #000}
   /* ================= SIMULATEUR ================= */
   function optionsHtml(list, sel) {
     return list.map(function (v) { return '<option value="' + esc(v) + '"' + (v === sel ? ' selected' : '') + '>' + esc(v) + '</option>'; }).join('');
+  }
+  function pairsHtml(pairs, sel) {
+    return pairs.map(function (p) { return '<option value="' + esc(p[0]) + '"' + (p[0] === sel ? ' selected' : '') + '>' + esc(p[1]) + '</option>'; }).join('');
   }
   function primeHtml(p) {
     var c = catInfo(p.name);
@@ -241,21 +254,35 @@ table.p-tab tr.fill td{height:100%;padding:0;border-bottom:1px solid #000}
       '<div class="card"><h2>Contrat</h2>' +
       '<div class="row"><div><label>Nom du salarié (facultatif)</label><input type="text" data-k="name" value="' + esc(state.name) + '" placeholder="Nom et prénom"></div></div>' +
       '<div class="row"><div><label>Type de contrat</label><select data-k="contract">' + optionsHtml(contracts, state.contract) + '</select></div></div>' +
+      '<div class="row c2"><div><label>Régime de paie</label><select data-k="regime">' +
+        pairsHtml([['mensuel', 'Au mois'], ['horaire', 'À l’heure']], state.regime) + '</select></div>' +
+      '<div><label>Temps de travail</label><select data-k="quotite">' +
+        pairsHtml([['1', 'Temps plein'], ['0.5', 'Mi-temps']], String(qte())) + '</select></div></div>' +
+      (qte() === 1 ? '' : '<p class="hint">Mi-temps : salaire de base et primes réduits de moitié' +
+        (isH() ? ' — ' + dj(hDef()) + ' h au lieu de ' + dj(WP.HOURS_FULL) + ' h.' : '.') + '</p>') +
       '<label>Le contrat indique</label><div class="seg" role="group">' + modeBtns + '</div>' +
       '<p class="hint" id="modeHint"></p>' +
       '<div class="row" style="margin-top:12px"><div><label id="amountLab"></label><input type="text" inputmode="decimal" data-k="amount" value="' + esc(state.amount) + '"></div></div></div>' +
-      '<div class="card"><h2>Jours du mois</h2>' +
-      '<div class="row c2"><div><label>Jours prévus (J.Prev)</label><input type="text" inputmode="decimal" data-k="prev" value="' + esc(state.prev) + '"></div>' +
-      '<div><label>Jours travaillés</label><input type="text" inputmode="decimal" data-k="trav" id="travInp" value="' + esc(state.trav) + '" placeholder="auto"></div></div>' +
-      '<div class="row c2"><div><label>Jours fériés payés</label><input type="text" inputmode="decimal" data-k="feries" value="' + esc(state.feries) + '" placeholder="0"></div>' +
-      '<div><label>Congés payés / maladie</label><input type="text" inputmode="decimal" data-k="conges" value="' + esc(state.conges) + '" placeholder="0"></div></div>' +
+      '<div class="card"><h2>' + (isH() ? 'Heures du mois' : 'Jours du mois') + '</h2>' +
+      (isH() ?
+        '<div class="row c2"><div><label>Heures prévues (H.Prev)</label><input type="text" inputmode="decimal" data-k="hprev" value="' + esc(state.hprev) + '" placeholder="' + dj(hDef()) + '"></div>' +
+        '<div><label>Heures travaillées</label><input type="text" inputmode="decimal" data-k="htrav" value="' + esc(state.htrav) + '" placeholder="auto"></div></div>' +
+        '<div class="row c2"><div><label>Heures fériées payées</label><input type="text" inputmode="decimal" data-k="hferies" value="' + esc(state.hferies) + '" placeholder="0"></div>' +
+        '<div><label>Heures congé / maladie</label><input type="text" inputmode="decimal" data-k="hconges" value="' + esc(state.hconges) + '" placeholder="0"></div></div>' +
+        '<div class="row"><div><label>Jours prévus (J.Prev, pour le bulletin)</label><input type="text" inputmode="decimal" data-k="prev" value="' + esc(state.prev) + '"></div></div>'
+        :
+        '<div class="row c2"><div><label>Jours prévus (J.Prev)</label><input type="text" inputmode="decimal" data-k="prev" value="' + esc(state.prev) + '"></div>' +
+        '<div><label>Jours travaillés</label><input type="text" inputmode="decimal" data-k="trav" id="travInp" value="' + esc(state.trav) + '" placeholder="auto"></div></div>' +
+        '<div class="row c2"><div><label>Jours fériés payés</label><input type="text" inputmode="decimal" data-k="feries" value="' + esc(state.feries) + '" placeholder="0"></div>' +
+        '<div><label>Congés payés / maladie</label><input type="text" inputmode="decimal" data-k="conges" value="' + esc(state.conges) + '" placeholder="0"></div></div>') +
       '<div id="daysInfo"></div></div>' +
       '<div class="card"><h2>Situation familiale</h2><div class="row c2">' +
       '<div><label>Chef de famille</label><div class="seg"><button data-act="chef" data-v="0" class="' + (!state.chef ? 'on' : '') + '">Non</button><button data-act="chef" data-v="1" class="' + (state.chef ? 'on' : '') + '">Oui</button></div></div>' +
       '<div><label>Enfants à charge</label><select data-k="enfants">' + [0, 1, 2, 3, 4, 5, 6].map(function (n) { return '<option value="' + n + '"' + (state.enfants === n ? ' selected' : '') + '>' + n + '</option>'; }).join('') + '</select></div></div></div>' +
       '<div class="card"><h2>Primes (montant d’un mois complet)</h2><div id="primes">' + state.primes.map(primeHtml).join('') + '</div>' +
       '<button class="btn" data-act="addprime">+ Ajouter une prime</button>' +
-      '<p class="hint">Les primes sont proratisées sur les jours travaillés.</p></div>' +
+      '<p class="hint">Les primes sont proratisées sur ' + (isH() ? 'les heures travaillées' : 'les jours travaillés') +
+        (qte() === 1 ? '' : ', puis réduites de moitié (mi-temps)') + '.</p></div>' +
       '<div class="card"><h2>Retenues sur le net</h2><div class="row c3">' +
       '<div><label>Avance</label><input type="text" inputmode="decimal" data-k="avance" value="' + esc(state.avance) + '" placeholder="0"></div>' +
       '<div><label>Crédit</label><input type="text" inputmode="decimal" data-k="credit" value="' + esc(state.credit) + '" placeholder="0"></div>' +
@@ -266,19 +293,20 @@ table.p-tab tr.fill td{height:100%;padding:0;border-bottom:1px solid #000}
   }
   function kv(l, v, cls) { return '<div class="kv ' + (cls || '') + '"><span>' + l + '</span><b>' + v + '</b></div>'; }
   function updateResults() {
-    var r = calc(), c = params.contracts[state.contract] || {}, D = r.days;
-    var partial = D.trav !== D.prev || D.fer > 0 || D.con > 0;
+    var r = calc(), c = params.contracts[state.contract] || {}, U = r.units;
+    var partial = U.trav !== U.prev || U.fer > 0 || U.con > 0;
     var ecart = state.mode === 'net' ? WP.r3(r.full.net - WP.r3(WP.num(state.amount))) : null;
     var html = '<div class="card hero"><div class="lab">Net à payer du mois</div><div class="big">' + fm(r.netAPayer) + ' DT</div>' +
-      '<div class="sub">Salaire de base : <b>' + fm(r.base) + ' DT</b> · Brut du mois : <b>' + fm(r.brut) + ' DT</b></div>' +
+      '<div class="sub">' + (r.horaire ? 'Taux horaire : <b>' + f5(r.rate) + ' DT/h</b>' : 'Salaire de base : <b>' + fm(r.baseMois) + ' DT</b>') +
+      ' · Brut du mois : <b>' + fm(r.brut) + ' DT</b></div>' +
       (partial ? '<div class="sub" style="margin-top:4px">Mois complet : net <b>' + fm(r.full.net) + ' DT</b></div>' : '') +
       (ecart !== null ? '<div style="margin-top:10px"><span class="pill ' + (Math.abs(ecart) <= 0.0011 ? 'ok' : 'warn') + '">' +
         (Math.abs(ecart) <= 0.0011 ? 'Net du contrat atteint' : 'Écart avec le net du contrat : ' + fm(ecart) + ' DT') + '</span></div>' : '') +
       '</div>';
     html += '<div class="card"><h2>Détail du mois</h2>' +
-      kv('Salaire de base' + (partial ? ' (' + dj(D.trav) + ' j / ' + dj(D.prev) + ')' : ''), fm(r.gBase)) +
-      (D.fer ? kv('Jours fériés (' + dj(D.fer) + ' j)', fm(r.gFer)) : '') +
-      (D.con ? kv('Congés payés / maladie (' + dj(D.con) + ' j)', fm(r.gCon)) : '') +
+      kv('Salaire de base' + (partial ? ' (' + uLab(U.trav) + ' / ' + uLab(U.prev) + ')' : ''), fm(r.gBase)) +
+      (U.fer ? kv((r.horaire ? 'Heures fériées (' : 'Jours fériés (') + uLab(U.fer) + ')', fm(r.gFer)) : '') +
+      (U.con ? kv('Congés payés / maladie (' + uLab(U.con) + ')', fm(r.gCon)) : '') +
       r.primes.map(function (p) { return kv(esc(p.name) + (p.mode === 'pct' ? ' (' + pct(p.value) + ')' : ''), fm(p.amount)); }).join('') +
       kv('Total brut', fm(r.brut), 'tot') +
       kv('CNSS salariale (' + pct(c.cnssS || 0) + ')', '− ' + fm(r.cnss)) +
@@ -296,18 +324,22 @@ table.p-tab tr.fill td{height:100%;padding:0;border-bottom:1px solid #000}
       kv('Coût total employeur', fm(r.cout), 'tot') + '</details></div>' +
       '<div class="btns"><button class="btn solid" data-act="gobul">Voir le bulletin</button><button class="btn ghost" style="border-style:solid" data-act="share">Partager</button></div>';
     $('#results').innerHTML = html;
-    $('#modeHint').textContent = MODE_HINTS[state.mode];
-    $('#amountLab').textContent = MODE_LABELS[state.mode] + ' (DT / mois complet)';
-    var info = '<div class="note info">Absences non payées : <b>' + dj(D.abs) + ' j</b>' + (D.auto ? ' · jours travaillés calculés : <b>' + dj(D.trav) + ' j</b>' : '') + '</div>';
-    if (D.over) info += '<div class="note warn">Travaillés + fériés + congés dépassent les jours prévus (' + dj(D.prev) + ').</div>';
+    var horaireBase = r.horaire && state.mode === 'base';
+    $('#modeHint').textContent = horaireBase ? 'Vous saisissez le taux horaire. Le mois complet compte ' + dj(U.prev) + ' h.' : MODE_HINTS[state.mode];
+    $('#amountLab').textContent = horaireBase ? 'Taux horaire (DT / h)' : MODE_LABELS[state.mode] + ' (DT / mois complet)';
+    var info = '<div class="note info">' + (r.horaire ? 'Heures non payées' : 'Absences non payées') + ' : <b>' + uLab(U.abs) + '</b>' +
+      (U.auto ? ' · ' + (r.horaire ? 'heures travaillées calculées' : 'jours travaillés calculés') + ' : <b>' + uLab(U.trav) + '</b>' : '') + '</div>';
+    if (U.over) info += '<div class="note warn">Travaillés + fériés + congés dépassent le total prévu (' + uLab(U.prev) + ').</div>';
     $('#daysInfo').innerHTML = info;
     window._last = r;
   }
   function shareText() {
     var r = window._last;
-    return (state.name ? state.name + ' — ' : '') + 'Contrat ' + state.contract + ' · ' + bul.mois + ' ' + bul.annee + '\n' +
-      'Jours : ' + dj(r.days.trav) + ' travaillés / ' + dj(r.days.prev) + ' prévus' + (r.days.fer ? ' · ' + dj(r.days.fer) + ' fériés' : '') + (r.days.con ? ' · ' + dj(r.days.con) + ' congés' : '') + '\n' +
-      'Salaire de base : ' + fm(r.base) + ' DT\nBrut : ' + fm(r.brut) + ' DT\nCNSS : ' + fm(r.cnss) + ' · IRPP : ' + fm(r.irpp) + ' · CSS : ' + fm(r.css) +
+    var U = r.units;
+    return (state.name ? state.name + ' — ' : '') + 'Contrat ' + state.contract + ' · ' + regimeLabel() + ' · ' + bul.mois + ' ' + bul.annee + '\n' +
+      (r.horaire ? 'Heures : ' : 'Jours : ') + dj(U.trav) + ' travaillés / ' + dj(U.prev) + ' prévus' + (U.fer ? ' · ' + dj(U.fer) + ' fériés' : '') + (U.con ? ' · ' + dj(U.con) + ' congés' : '') + '\n' +
+      (r.horaire ? 'Taux horaire : ' + f5(r.rate) + ' DT/h' : 'Salaire de base : ' + fm(r.baseMois) + ' DT') +
+      '\nBrut : ' + fm(r.brut) + ' DT\nCNSS : ' + fm(r.cnss) + ' · IRPP : ' + fm(r.irpp) + ' · CSS : ' + fm(r.css) +
       '\nNet : ' + fm(r.net) + ' DT\nNet à payer : ' + fm(r.netAPayer) + ' DT';
   }
 
@@ -319,7 +351,7 @@ table.p-tab tr.fill td{height:100%;padding:0;border-bottom:1px solid #000}
   var BUL_FIELDS = [
     ['societe', 'Société'], ['adresseSoc', 'Adresse de la société'], ['affil', 'Affiliation CNSS société'],
     ['matricule', 'Matricule'], ['cnssNo', 'N° CNSS du salarié'], ['emploi', 'Emploi'], ['categorie', 'Catégorie'], ['echelon', 'Échelon'],
-    ['regime', 'Régime horaire'], ['adresse', 'Adresse du salarié'], ['cin', 'CIN'], ['dept', 'Département'],
+    ['adresse', 'Adresse du salarié'], ['cin', 'CIN'], ['dept', 'Département'],
     ['paiement', 'Mode de paiement'], ['banque', 'Intitulé banque'], ['compte', 'N° de compte'], ['acquis', 'Congés acquis ce mois (j)'], ['solde', 'Solde congé payé (j)']
   ];
   function renderBul() {
@@ -337,14 +369,14 @@ table.p-tab tr.fill td{height:100%;padding:0;border-bottom:1px solid #000}
   }
   function tr(cls, cells) { return '<tr class="' + cls + '">' + cells.map(function (c, i) { return '<td' + (i > 0 ? ' class="r"' : '') + '>' + (c == null ? '' : c) + '</td>'; }).join('') + '</tr>'; }
   function updatePaper() {
-    var r = calc(), c = params.contracts[state.contract] || {}, D = r.days;
+    var r = calc(), c = params.contracts[state.contract] || {}, D = r.days, U = r.units;
     var sit = state.chef ? 'CHEF DE FAMILLE' : 'CELIBATAIRE';
     var rows = '';
-    rows += tr('', ['Salaire de base', f1(D.trav), f5(r.daily), fp(D.trav / D.prev), f3(r.gBase), '', '', '']);
-    rows += tr('', ['Congé(s) payé(s) / maladie', f1(D.con), f5(r.daily), fp(D.con / D.prev), f3(r.gCon), '', '', '']);
-    rows += tr('', ['Jours fériés', f1(D.fer), f5(r.daily), fp(D.fer / D.prev), f3(r.gFer), '', '', '']);
-    rows += tr('', ['Absences non payées', f1(D.abs), '', fp(D.abs / D.prev), D.abs > 0 ? f3(r.gAbs) : '', '', '', '']);
-    r.primes.forEach(function (p) { rows += tr('', [esc(p.name), f1(D.trav), f5(p.full / D.prev), '', f3(p.amount), '', '', '']); });
+    rows += tr('', ['Salaire de base', f1(U.trav), f5(r.rate), fp(U.trav / U.prev), f3(r.gBase), '', '', '']);
+    rows += tr('', ['Congé(s) payé(s) / maladie', f1(U.con), f5(r.rate), fp(U.con / U.prev), f3(r.gCon), '', '', '']);
+    rows += tr('', [r.horaire ? 'Heures fériées' : 'Jours fériés', f1(U.fer), f5(r.rate), fp(U.fer / U.prev), f3(r.gFer), '', '', '']);
+    rows += tr('', ['Absences non payées', f1(U.abs), '', fp(U.abs / U.prev), U.abs > 0 ? f3(r.gAbs) : '', '', '', '']);
+    r.primes.forEach(function (p) { rows += tr('', [esc(p.name), f1(U.trav), f5(p.full / U.prev), '', f3(p.amount), '', '', '']); });
     rows += tr('sp', ['', '', '', '', '', '', '', '']);
     rows += tr('b', ['Total Brut', '', '', '', f3(r.brut), '', '', '']);
     rows += tr('sp', ['', '', '', '', '', '', '', '']);
@@ -378,9 +410,10 @@ table.p-tab tr.fill td{height:100%;padding:0;border-bottom:1px solid #000}
         '<div class="l"><b>Enfants à charge</b><span class="v">' + state.enfants + '</span></div></div>' +
       '<div><div class="l"><b>Emploi :</b><span class="v">' + B('emploi') + '</span></div>' +
         '<div class="cat"><b>Catégorie :</b><span>' + B('categorie') + '</span><b style="min-width:0;margin-left:14px">Echelon :</b><span>' + B('echelon') + '</span></div>' +
-        '<div class="l"><b>J.Prev :</b><span class="v">' + dj(D.prev) + ' j</span></div>' +
-        '<div class="l"><b>Salaire de base</b><span class="v">' + f3(r.base) + '</span></div>' +
-        '<div class="l"><b>Régime horaire</b><span class="v">' + B('regime') + '</span></div></div>' +
+        '<div class="cat"><b>J.Prev :</b><span>' + dj(D.prev) + ' j</span>' +
+          (r.horaire ? '<b style="min-width:0;margin-left:14px">H.Prev :</b><span>' + dj(U.prev) + ' h</span>' : '') + '</div>' +
+        '<div class="l"><b>Salaire de base</b><span class="v">' + (r.horaire ? f5(r.rate) + ' / h' : f3(r.baseMois)) + '</span></div>' +
+        '<div class="l"><b>Régime horaire</b><span class="v">' + regimeLabel() + '</span></div></div>' +
       '<div class="col3"><div class="l"><b>Nom &amp;</b><b style="min-width:0">' + esc(state.name) + '</b></div>' +
         '<div class="l"><b>Adresse :</b><span class="v">' + B('adresse') + '</span></div>' +
         '<div class="l"><b>CIN :</b><span class="v">' + B('cin') + '</span></div>' +
@@ -392,10 +425,10 @@ table.p-tab tr.fill td{height:100%;padding:0;border-bottom:1px solid #000}
       '<div class="p-foot"><div>' +
         '<div class="p-pay"><div>Mode de paiement</div><div>Intitulé banque</div><div>N° de compte</div><div>' + B('paiement') + '</div><div>' + B('banque') + '</div><div>' + B('compte') + '</div></div>' +
         '<div class="p-sign"><div><b>Signature et cachet employeur</b><div></div></div><div><b>Signature employé</b><div></div></div></div></div>' +
-      '<div><div class="p-cg"><div>Congés pris mois en cours (payé / maladie) :</div><div>' + f1(D.con) + '</div></div>' +
+      '<div><div class="p-cg"><div>Congés pris mois en cours (payé / maladie) :</div><div>' + f1(U.con) + '</div></div>' +
         '<div class="p-cg"><div>Congés acquis mois en cours :</div><div>' + f1(WP.num(bul.acquis)) + '</div></div>' +
         '<div class="p-cg"><div>Solde congé payé :</div><div>' + f1(WP.num(bul.solde)) + '</div></div>' +
-        '<div class="p-cg"><div>Nombre de jours d’absence :</div><div>' + f1(D.abs) + '</div></div></div></div>';
+        '<div class="p-cg"><div>Nombre ' + (r.horaire ? 'd’heures' : 'de jours') + ' d’absence :</div><div>' + f1(U.abs) + '</div></div></div></div>';
     $('#paper').innerHTML = html;
     window._last = r;
     fitPaper();
@@ -498,7 +531,11 @@ table.p-tab tr.fill td{height:100%;padding:0;border-bottom:1px solid #000}
       if (t.dataset.f === 'name' || t.dataset.f === 'mode') { $('#primes').innerHTML = state.primes.map(primeHtml).join(''); }
       updateResults();
     } else if (t.dataset.k) {
-      state[t.dataset.k] = t.dataset.k === 'enfants' ? parseInt(t.value, 10) : t.value; persist(); updateResults();
+      var k = t.dataset.k;
+      state[k] = k === 'enfants' ? parseInt(t.value, 10) : k === 'quotite' ? parseFloat(t.value) : t.value;
+      persist();
+      // changer de régime ou de quotité change les champs affichés (jours ↔ heures)
+      if (k === 'regime' || k === 'quotite') renderSim(); else updateResults();
     }
   });
   app.addEventListener('click', function (e) {
