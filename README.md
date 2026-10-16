@@ -26,13 +26,9 @@ En régime horaire, le mois se compte en heures (`H.Prev`) et le salaire de base
 
 ### Bulletin de paie
 
-Modèle **noir et blanc**, prêt à imprimer ou à exporter en PDF depuis le navigateur. Le nom de l'auteur apparaît en filigrane en fond de page, avec le tampon d'auteur et la mention de droit d'auteur en pied de document — à l'écran comme à l'impression.
+Modèle **noir et blanc**, prêt à imprimer ou à exporter en PDF depuis le navigateur. Le nom de l'auteur apparaît en filigrane en fond de page et la mention de droit d'auteur en pied de document — à l'écran comme à l'impression.
 
 ![Bulletin de paie](docs/screenshots/bulletin.png)
-
-Un second modèle, plus proche d'un bulletin classique, reste disponible dans la liste **Modèle du bulletin** :
-
-![Modèle classique](docs/screenshots/bulletin-classique.png)
 
 ### Paramètres
 
@@ -84,14 +80,7 @@ Avance, remboursement de crédit et pénalités sont déduits après le calcul d
 
 Bulletin au format tunisien : en-tête société et salarié, tableau des gains et retenues avec part patronale, net à payer en dinars, mode de paiement, zones de signature et suivi des congés. Imprimable directement ou exportable en PDF.
 
-Deux modèles au choix :
-
-| Modèle | Description |
-|--------|-------------|
-| **Noir et blanc** (par défaut) | Mise en page sobre, gains et retenues regroupés par section, filigrane au nom de l'auteur, tampon d'auteur et mention de droit d'auteur |
-| **Classique** | Mise en page tabulaire traditionnelle, encadrés pleine largeur |
-
-Le filigrane et le tampon sont conservés à l'impression comme à l'affichage.
+Mise en page sobre en noir et blanc : gains, retenues salariales et charges patronales regroupés par section avec leur total, net à payer en encadré, congés et paiement en pied de page. Le filigrane au nom de l'auteur et la mention de droit d'auteur sont conservés à l'impression comme à l'affichage.
 
 ### Paramètres modifiables
 
@@ -174,7 +163,10 @@ Le mois complet de référence garde le régime et la quotité du salarié : pou
 
 ### En ligne
 
-Ouvrir [aya-fekih-romdhane.github.io/Paie-Simulator](https://aya-fekih-romdhane.github.io/Paie-Simulator/), puis, sur téléphone, utiliser le bouton **Installer l'application sur le téléphone** pour l'ajouter à l'écran d'accueil et l'utiliser hors ligne.
+Ouvrir [aya-fekih-romdhane.github.io/Paie-Simulator](https://aya-fekih-romdhane.github.io/Paie-Simulator/), puis l'ajouter à l'écran d'accueil pour l'utiliser hors ligne :
+
+- **Android, Chrome, Edge** : le bouton **Installer l'application sur le téléphone** s'affiche en haut de l'écran.
+- **iPhone et iPad** : iOS n'expose aucune API d'installation — Safari ne peut donc pas afficher ce bouton. L'ajout se fait par **Partager** puis **Sur l'écran d'accueil**. L'application affiche d'elle-même cette consigne lorsqu'elle est ouverte sur iOS.
 
 ### En local
 
@@ -234,7 +226,7 @@ Principales fonctions exposées : `solve`, `solveBase`, `compute`, `normDays`, `
 
 HTML, CSS et JavaScript natifs — aucun framework, aucune dépendance, aucune compilation. Progressive Web App (manifeste et service worker), données conservées en `localStorage`, hébergement GitHub Pages.
 
-Interface aux couleurs de la Tunisie : drapeau en en-tête, filet rouge et blanc, icônes de section dessinées en SVG. Le tampon d'auteur du bulletin est lui aussi un SVG, sans image externe — le document reste donc entièrement autonome et imprimable hors ligne.
+Interface aux couleurs de la Tunisie : drapeau en en-tête, filet rouge et blanc, rouge tunisien en couleur d'accent et icônes de section dessinées en SVG. Aucune image externe n'est chargée — l'application et le bulletin restent entièrement autonomes et imprimables hors ligne.
 
 ---
 
